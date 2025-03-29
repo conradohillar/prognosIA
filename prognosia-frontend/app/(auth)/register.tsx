@@ -1,0 +1,134 @@
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { useState } from 'react';
+import { router } from 'expo-router';
+
+export default function RegisterScreen() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+
+  const [passVisible, setPassVisible] = useState(false);
+  const [confirmPassVisible, setConfirmPassVisible] = useState(false);
+
+  const handleHideOrShowPass = () => {
+    setPassVisible(!passVisible);
+  }
+
+  const handleHideOrShowConfirmPass = () => {
+    setConfirmPassVisible(!passVisible);
+  }
+
+  const handleRegister = () => {
+    // Validate passwords match
+    if (password !== confirmPassword) {
+      // Show error message
+      console.log('Passwords do not match');
+      return;
+    }
+
+    // TODO: Implement actual registration logic here
+    console.log('Registration attempted with:', email, password);
+    // On successful registration, navigate to main app
+    router.replace('/(tabs)/profile');
+  };
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>Crear cuenta</Text>
+      
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          placeholderTextColor="#aaa"
+          value={email}
+          onChangeText={setEmail}
+          autoCapitalize="none"
+          keyboardType="email-address"
+        />
+        
+        <TextInput
+          style={styles.input}
+          placeholder="Contraseña"
+          placeholderTextColor="#aaa"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry={passVisible}
+        />
+
+        <TextInput
+          style={styles.input}
+          placeholder="Confirmar contraseña"
+          placeholderTextColor="#aaa"
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
+          secureTextEntry={confirmPassVisible}
+        />
+      </View>
+
+      <TouchableOpacity 
+        style={styles.registerButton}
+        onPress={handleRegister}
+      >
+        <Text style={styles.registerButtonText}>Registrarse</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity 
+        onPress={() => router.back()}
+      >
+        <Text style={styles.loginText}>Ya tenés una cuenta? {" "}
+          <Text style={styles.loginTextColor}>Iniciá sesión</Text>
+        </Text>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
+    backgroundColor: '#fff',
+  },
+  title: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    marginBottom: 30,
+    textAlign: 'center',
+  },
+  inputContainer: {
+    gap: 15,
+    marginBottom: 30,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ddd',
+    padding: 15,
+    borderRadius: 8,
+    fontSize: 16,
+  },
+  registerButton: {
+    backgroundColor: '#F00',
+    padding: 15,
+    borderRadius: 8,
+    alignItems: 'center',
+  },
+  registerButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  loginText: {
+    marginTop: 20,
+    textAlign: 'center',
+    color: '#000',
+  },
+  loginTextColor: {
+    marginTop: 20,
+    textAlign: 'center',
+    color: '#FF0000',
+    fontWeight: 'bold'
+  }
+  
+});
