@@ -5,9 +5,9 @@ df = pd.read_csv("./heart_disease.csv")
 
 # Convert categorical values
 df["Gender"] = df["Gender"].map({"Male": 1, "Female": 0})  # M → 1, F → 0
-df["Exercise Habits"] = df["Exercise Habits"].map({
-    "High": 1, "Medium": 2, "Low": 3
-})  # High → 1, Medium → 2, Low → 3
+df["Diet"] = df["Exercise Habits"].map({
+    "Unhealthy": 0, "Moderate": 1, "Healthy": 2
+})  # Unhealthy → 0, Moderate → 1, Healthy → 2
 df["Smoking"] = df["Smoking"].map({
     "No": 0, "Yes": 1
 })  # No → 0, Yes → 1
