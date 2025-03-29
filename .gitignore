@@ -136,6 +136,7 @@ dist
 .pnp.*
 
 prognosia-frontend/prognosia-d904c-firebase-adminsdk-fbsvc-8490f6a599.json
+prognosia-frontend/firebaseConfig.json
 __pycache__
 paciente
 estudios
