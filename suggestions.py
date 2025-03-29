@@ -18,7 +18,7 @@ DATA_JSON = os.path.join(PACIENTE_DIR, "data.json")
 HISTORIA_ARCHIVO = os.path.join(PACIENTE_DIR, "historia")  # Puede ser .pdf o .txt
 RESUMEN_ESTUDIOS = os.path.join(PACIENTE_DIR, "resumen_estudios.txt")
 RESUMEN_HISTORIA = os.path.join(PACIENTE_DIR, "resumen_historia.txt")
-SUGERENCIAS_JSON = "sugerencias.json"
+SUGERENCIAS_JSON = os.path.join(PACIENTE_DIR, "sugerencias.json") 
 METADATA_FILE = os.path.join(PACIENTE_DIR, "metadata.json")
 
 # 🔹 Validar entrada de parámetros en ejecución
@@ -111,6 +111,16 @@ def generar_resumen_ia(resumen):
     )
     return response.choices[0].message.content
 
+def guardar_sugerencia(sugerencia, medicamentos, sintomas):
+    data = {
+        "fecha": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "medicamentos": medicamentos,
+        "sintomas": sintomas,
+        "sugerencia": sugerencia
+    }
+    with open(SUGERENCIAS_JSON, "w", encoding="utf-8") as file:
+        json.dump(data, file, indent=4, ensure_ascii=False)
+
 # 🔹 Función para solicitar estudios médicos sugeridos
 def sugerir_estudios(datos_medicos, medicamentos, sintomas, resumen_estudios, resumen_historia):
     prompt = f"""
@@ -135,7 +145,10 @@ def sugerir_estudios(datos_medicos, medicamentos, sintomas, resumen_estudios, re
     {resumen_historia}
 
     **Responde con una lista de estudios sugeridos, su breve descripción y por qué son importantes. 
-    Estos deben ser faciles de entender por el usuario y no debe ser muy especifico. No debe asustar o hacer preocupar al usuario.**
+    Estos deben ser faciles de entender por el usuario y no debe ser muy especifico. No debe asustar o hacer preocupar al usuario.
+    Ten en cuenta para esto ademas de los datos clinicos, personales, sintomas y medicamentos tambien la frecuencia con la que las
+    personas de ese grupo deben realizarse estudios de distintos tipos y la ultima vez que se los haya realizado.
+    Tambien debes darle importancia a los sintomas actuales y los datos previos.**
     """
     #**Responde con una lista de estudios sugeridos, sin explicaciones adicionales.**
     response = client.chat.completions.create(
@@ -158,6 +171,7 @@ with open(RESUMEN_HISTORIA, "r", encoding="utf-8") as file:
     resumen_historia = generar_resumen_ia(file.read())
 
 resultado = sugerir_estudios(datos_paciente, medicamentos, sintomas, resumen_estudios, resumen_historia)
+guardar_sugerencia(resultado, medicamentos, sintomas)
 
 print("\n📋 **Estudios sugeridos:**\n")
 print(resultado)
