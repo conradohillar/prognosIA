@@ -7,6 +7,7 @@ import csv
 import sys
 from datetime import datetime
 from config import API_KEY
+from PIL import Image
 
 # Configura tu clave de API
 client = openai.OpenAI(api_key=API_KEY)
@@ -28,6 +29,10 @@ if len(sys.argv) < 3:
 
 medicamentos = sys.argv[1]
 sintomas = sys.argv[2]
+
+# Función para detectar imágenes en el directorio de estudios
+def detectar_imagenes():
+    return [f for f in os.listdir(ESTUDIOS_DIR) if f.lower().endswith((".png", ".jpg", ".jpeg"))]
 
 def verificar_directorio(directorio):
     if not os.path.exists(directorio):
@@ -105,10 +110,20 @@ def cargar_datos_paciente():
         return None
 
 def generar_resumen_ia(resumen):
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[{"role": "user", "content": f"Genera un resumen claro y breve de este contenido: {resumen}"}]
-    )
+    imagenes = detectar_imagenes()
+    model = "gpt-4o" if imagenes else "gpt-4o-mini"
+
+    with open(RESUMEN_ESTUDIOS, "r", encoding="utf-8") as file:
+        contenido = file.read()
+    
+    messages = [{"role": "user", "content": f"Genera un resumen claro y breve de este contenido: {contenido}"}]
+    
+    if imagenes:
+        for img in imagenes:
+            with open(os.path.join(ESTUDIOS_DIR, img), "rb") as image_file:
+                messages.append({"role": "user", "content": {"type": "image", "image": image_file.read()}})
+    
+    response = client.chat.completions.create(model=model, messages=messages)
     return response.choices[0].message.content
 
 def guardar_sugerencia(sugerencia, medicamentos, sintomas):
