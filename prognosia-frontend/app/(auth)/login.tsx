@@ -1,6 +1,7 @@
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { useState } from 'react';
 import { router } from 'expo-router';
+import { FontAwesome } from '@expo/vector-icons';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
@@ -33,15 +34,26 @@ export default function LoginScreen() {
           keyboardType="email-address"
         />
         
-        <TextInput
-          style={styles.input}
-          placeholder="Contras"
-          placeholderTextColor="#AAA"
-          
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry={passVisible}
-        />
+        <View style={styles.passwordContainer}>
+          <TextInput
+            style={styles.passwordInput}
+            placeholder="Contraseña"
+            placeholderTextColor="#AAA"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={!passVisible}
+          />
+          <TouchableOpacity 
+            onPress={handleHideOrShowPass}
+            style={styles.eyeButton}
+          >
+            <FontAwesome 
+              name={passVisible ? "eye" : "eye-slash"} 
+              size={20} 
+              color="#666" 
+            />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <TouchableOpacity 
@@ -109,5 +121,20 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#FF0000',
     fontWeight: 'bold'
-  }
+  },
+  passwordContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 8,
+  },
+  passwordInput: {
+    flex: 1,
+    padding: 15,
+    fontSize: 16,
+  },
+  eyeButton: {
+    padding: 15,
+  },
 });

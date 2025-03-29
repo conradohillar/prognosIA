@@ -1,6 +1,7 @@
 import { StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import { router } from 'expo-router';
 
 export default function ProfileScreen() {
   return (
@@ -13,40 +14,43 @@ export default function ProfileScreen() {
         <Text style={styles.name}>John Doe</Text>
         <Text style={styles.email}>john.doe@example.com</Text>
         
-        <TouchableOpacity style={styles.editButton}>
+        <TouchableOpacity 
+          style={styles.editButton}
+          onPress={() => router.push('/editProfileModal')}
+        >
           <FontAwesome name="edit" size={16} color="#fff" />
           <Text style={styles.editButtonText}>Edit Profile</Text>
         </TouchableOpacity>
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Personal Information</Text>
+        <Text style={styles.sectionTitle}>Información personal</Text>
         <View style={styles.infoContainer}>
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Username</Text>
+            <Text style={styles.infoLabel}>Nombre de usuario</Text>
             <Text style={styles.infoValue}>@johndoe</Text>
           </View>
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Phone</Text>
+            <Text style={styles.infoLabel}>Teléfono</Text>
             <Text style={styles.infoValue}>+1 234 567 8900</Text>
           </View>
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Location</Text>
+            <Text style={styles.infoLabel}>Ubicación</Text>
             <Text style={styles.infoValue}>New York, USA</Text>
           </View>
         </View>
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Stats</Text>
+        <Text style={styles.sectionTitle}>Estadísticas</Text>
         <View style={styles.statsContainer}>
           <View style={styles.statItem}>
             <Text style={styles.statNumber}>156</Text>
-            <Text style={styles.statLabel}>Predictions</Text>
+            <Text style={styles.statLabel}>Predicciones</Text>
           </View>
           <View style={styles.statItem}>
             <Text style={styles.statNumber}>89%</Text>
-            <Text style={styles.statLabel}>Accuracy</Text>
+            <Text style={styles.statLabel}>Precisión</Text>
           </View>
           <View style={styles.statItem}>
             <Text style={styles.statNumber}>24</Text>
@@ -106,14 +110,17 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 15,
+    color: '#000'
   },
   infoContainer: {
     gap: 15,
+    backgroundColor: '#fff'
   },
   infoRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    backgroundColor: '#fff'
   },
   infoLabel: {
     fontSize: 16,
@@ -121,14 +128,17 @@ const styles = StyleSheet.create({
   },
   infoValue: {
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: 'bold',
+    color: '#000',
   },
   statsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
+    backgroundColor: '#fff'
   },
   statItem: {
     alignItems: 'center',
+    backgroundColor: '#fff'
   },
   statNumber: {
     fontSize: 24,

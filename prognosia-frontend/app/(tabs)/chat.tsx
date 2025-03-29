@@ -1,31 +1,139 @@
-import { StyleSheet } from 'react-native';
-
-import EditScreenInfo from '@/components/EditScreenInfo';
+import { StyleSheet, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import { useState } from 'react';
 import { Text, View } from '@/components/Themed';
+import { FontAwesome5 } from '@expo/vector-icons';
 
-export default function TabTwoScreen() {
+export default function ChatScreen() {
+  const [sintomas, setSintomas] = useState('');
+  const [medicamentos, setMedicamentos] = useState('');
+
+  const enviarInformacion = () => {
+    if (sintomas.trim()) {
+      // Aquí irá la lógica para procesar la información
+      console.log({ sintomas, medicamentos });
+    }
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Tab Two</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/two.tsx" />
-    </View>
+    <KeyboardAvoidingView 
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}
+    >
+      <ScrollView 
+        style={styles.contentContainer}
+        showsVerticalScrollIndicator={false}
+      >
+        <Text style={styles.titulo}>Contame sobre tu situación</Text>
+        
+        <View style={styles.inputGroup}>
+          <View style={styles.inputHeader}>
+            <FontAwesome5 name="notes-medical" size={20} color="#f44" />
+            <Text style={styles.inputTitle}>Síntomas</Text>
+          </View>
+          <TextInput
+            style={styles.textArea}
+            value={sintomas}
+            onChangeText={setSintomas}
+            placeholder="Describe los síntomas que estás experimentando..."
+            placeholderTextColor="#666"
+            multiline
+            numberOfLines={6}
+            textAlignVertical="top"
+          />
+        </View>
+
+        <View style={styles.inputGroup}>
+          <View style={styles.inputHeader}>
+            <FontAwesome5 name="pills" size={20} color="#f44" />
+            <Text style={styles.inputTitle}>Medicamentos</Text>
+          </View>
+          <TextInput
+            style={styles.textArea}
+            value={medicamentos}
+            onChangeText={setMedicamentos}
+            placeholder="¿Estás tomando algún medicamento? Especifica cuáles..."
+            placeholderTextColor="#666"
+            multiline
+            numberOfLines={4}
+            textAlignVertical="top"
+          />
+        </View>
+
+        <TouchableOpacity 
+          style={styles.botonEnviar}
+          onPress={enviarInformacion}
+        >
+          <Text style={styles.botonTexto}>Analizar Síntomas</Text>
+          <FontAwesome5 name="arrow-right" size={16} color="#fff" />
+        </TouchableOpacity>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#f5f5f5',
+  },
+  contentContainer: {
+    flex: 1,
+    padding: 20,
+  },
+  titulo: {
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: '#333',
+    marginVertical: 30,
+    textAlign: 'center',
+  },
+  inputGroup: {
+    marginBottom: 24,
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    padding: 16,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  inputHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  inputTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#333',
+    marginLeft: 10,
+  },
+  textArea: {
+    backgroundColor: '#f8f8f8',
+    borderRadius: 12,
+    padding: 16,
+    fontSize: 16,
+    color: '#333',
+    minHeight: 120,
+  },
+  botonEnviar: {
+    backgroundColor: '#f44',
+    borderRadius: 12,
+    padding: 16,
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    marginTop: 10,
+    marginBottom: 30,
   },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  separator: {
-    marginVertical: 30,
-    height: 1,
-    width: '80%',
+  botonTexto: {
+    color: '#fff',
+    fontSize: 18,
+    fontWeight: '600',
+    marginRight: 10,
   },
 });
