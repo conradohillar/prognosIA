@@ -64,7 +64,7 @@ export default function RegisterScreen() {
             <FontAwesome 
               name={passVisible ? "eye" : "eye-slash"} 
               size={20} 
-              color="#666" 
+              color="#aaa" 
             />
           </TouchableOpacity>
         </View>
@@ -85,7 +85,7 @@ export default function RegisterScreen() {
             <FontAwesome 
               name={confirmPassVisible ? "eye" : "eye-slash"} 
               size={20} 
-              color="#666" 
+              color="#aaa" 
             />
           </TouchableOpacity>
         </View>

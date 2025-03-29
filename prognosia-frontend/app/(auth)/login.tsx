@@ -27,7 +27,7 @@ export default function LoginScreen() {
         <TextInput
           style={styles.input}
           placeholder="Email"
-          placeholderTextColor="#AAA"
+          placeholderTextColor="#aaa"
           value={email}
           onChangeText={setEmail}
           autoCapitalize="none"
@@ -38,7 +38,7 @@ export default function LoginScreen() {
           <TextInput
             style={styles.passwordInput}
             placeholder="Contraseña"
-            placeholderTextColor="#AAA"
+            placeholderTextColor="#aaa"
             value={password}
             onChangeText={setPassword}
             secureTextEntry={!passVisible}
@@ -50,7 +50,7 @@ export default function LoginScreen() {
             <FontAwesome 
               name={passVisible ? "eye" : "eye-slash"} 
               size={20} 
-              color="#666" 
+              color="#aaa" 
             />
           </TouchableOpacity>
         </View>
