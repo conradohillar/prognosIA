@@ -1,12 +1,11 @@
 import { StatusBar } from 'expo-status-bar';
-import { Platform, StyleSheet, TouchableOpacity, Image, Dimensions } from 'react-native';
+import { Platform, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import * as DocumentPicker from 'expo-document-picker';
 import { Text, View } from '@/components/Themed';
 import { router } from 'expo-router';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useState } from 'react';
 import * as FileSystem from 'expo-file-system';
-import Pdf from 'react-native-pdf';
 
 export default function AddFileModal() {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -94,24 +93,6 @@ export default function AddFileModal() {
             </TouchableOpacity>
           </View>
 
-          <View style={styles.pdfContainer}>
-            {pdfUri && (
-              <Pdf
-                source={{ uri: pdfUri }}
-                style={styles.pdf}
-                onLoadComplete={(numberOfPages, filePath) => {
-                  console.log(`Number of pages: ${numberOfPages}`);
-                }}
-                onPageChanged={(page, numberOfPages) => {
-                  console.log(`Current page: ${page}`);
-                }}
-                onError={(error) => {
-                  console.log(error);
-                }}
-              />
-            )}
-          </View>
-
           <TouchableOpacity 
             style={styles.confirmButton}
             onPress={uploadFile}
@@ -167,6 +148,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     alignItems: 'center',
+    justifyContent: 'center',
   },
   fileInfo: {
     alignItems: 'center',
@@ -174,7 +156,7 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 10,
     width: '100%',
-    marginTop: 20,
+    marginBottom: 20,
   },
   fileName: {
     fontSize: 16,
@@ -197,23 +179,11 @@ const styles = StyleSheet.create({
     color: '#666',
     fontSize: 14,
   },
-  pdfContainer: {
-    flex: 1,
-    width: '100%',
-    marginVertical: 20,
-  },
-  pdf: {
-    flex: 1,
-    width: Dimensions.get('window').width - 40,
-    height: '100%',
-    backgroundColor: '#fff',
-  },
   confirmButton: {
     backgroundColor: '#4CAF50',
     paddingHorizontal: 40,
     paddingVertical: 15,
     borderRadius: 25,
-    marginBottom: 20,
   },
   confirmButtonText: {
     color: '#fff',
