@@ -5,11 +5,11 @@ import { Text, View } from '@/components/Themed';
 import { router } from 'expo-router';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useState } from 'react';
-import * as FileSystem from 'expo-file-system';
+import { DocumentPickerAsset } from 'expo-document-picker';
 
 export default function AddFileModal() {
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [pdfUri, setPdfUri] = useState(null);
+  const [selectedFile, setSelectedFile] = useState<DocumentPickerAsset | null>(null);
+  const [pdfUri, setPdfUri] = useState<string | null>(null);
 
   const pickDocument = async () => {
     try {
@@ -38,9 +38,9 @@ export default function AddFileModal() {
       const formData = new FormData();
       formData.append('file', {
         uri: selectedFile.uri,
-        type: selectedFile.mimeType,
+        type: selectedFile.mimeType || 'application/pdf',
         name: selectedFile.name
-      });
+      } as any);
 
       // Send file to backend
       const response = await fetch('YOUR_API_ENDPOINT/upload', {
@@ -83,7 +83,7 @@ export default function AddFileModal() {
             <FontAwesome name="file-pdf-o" size={36} color="#e74c3c" />
             <Text style={styles.fileName}>{selectedFile.name}</Text>
             <Text style={styles.fileSize}>
-              {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
+              {((selectedFile.size ?? 0) / 1024 / 1024).toFixed(2)} MB
             </Text>
             <TouchableOpacity 
               style={styles.changeFileButton}

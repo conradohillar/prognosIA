@@ -30,7 +30,7 @@ export default function TabLayout() {
         name="profile"
         options={{
           title: 'Perfil',
-          tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
+          tabBarIcon: ({ color }) => <TabBarIcon name="user-circle-o" color={color} />,
           headerRight: () => (
             <Link href="/modal" asChild>
               <Pressable>
@@ -50,14 +50,14 @@ export default function TabLayout() {
       <Tabs.Screen
         name="chat"
         options={{
-          title: 'Chatty',
-          tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
+          title: 'Asistente',
+          tabBarIcon: ({ color }) => <TabBarIcon name="superpowers" color={color} />,
         }}
       /><Tabs.Screen
       name="history"
       options={{
         title: 'Historia Clínica',
-        tabBarIcon: ({ color }) => <TabBarIcon name="user" color={color} />,
+        tabBarIcon: ({ color }) => <TabBarIcon name="file-text" color={color} />,
       }}
     />
     </Tabs>
