@@ -17,7 +17,7 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: '#FF4444',
+        tabBarActiveTintColor: '#F44',
         // Disable the static render of the header on web
         // to prevent a hydration error in React Navigation v6.
         headerShown: useClientOnlyValue(false, true),
@@ -32,13 +32,13 @@ export default function TabLayout() {
           title: 'Perfil',
           tabBarIcon: ({ color }) => <TabBarIcon name="user-circle-o" color={color} />,
           headerRight: () => (
-            <Link href="/modal" asChild>
+            <Link href="/editProfileModal" asChild>
               <Pressable>
                 {({ pressed }) => (
                   <FontAwesome
-                    name="info-circle"
+                    name="edit"
                     size={25}
-                    color={Colors.light.text}
+                    color="#666"
                     style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
                   />
                 )}

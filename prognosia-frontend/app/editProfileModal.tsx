@@ -3,7 +3,7 @@ import { Platform, StyleSheet, ScrollView, TextInput, TouchableOpacity, Keyboard
 import { Text, View } from '@/components/Themed';
 import { useState } from 'react';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
-import { Picker } from '@react-native-picker/picker';
+import DropDownPicker from 'react-native-dropdown-picker';
 import { FontAwesome } from '@expo/vector-icons';
 import { router } from 'expo-router';
 
@@ -15,28 +15,22 @@ export default function EditProfileModal() {
   const [allergies, setAllergies] = useState('');
   const [conditions, setConditions] = useState('');
   const [activityLevel, setActivityLevel] = useState('');
-  const [showSexPicker, setShowSexPicker] = useState(false);
-  const [showActivityPicker, setShowActivityPicker] = useState(false);
+  const [openSex, setOpenSex] = useState(false);
+  const [openActivity, setOpenActivity] = useState(false);
 
-  const getSexLabel = (value: string) => {
-    switch(value) {
-      case 'hombre': return 'Hombre';
-      case 'mujer': return 'Mujer';
-      case 'otro': return 'Otro';
-      default: return 'Seleccione su sexo';
-    }
-  };
+  const sexItems = [
+    {label: 'Hombre', value: 'hombre'},
+    {label: 'Mujer', value: 'mujer'},
+    {label: 'Otro', value: 'otro'}
+  ];
 
-  const getActivityLabel = (value: string) => {
-    switch(value) {
-      case 'nunca': return 'Nunca';
-      case 'una_vez': return 'Una vez por semana o menos';
-      case 'una_tres': return 'Entre 1 y 3 veces por semana';
-      case 'cuatro_seis': return 'Entre 4 y 6 veces por semana';
-      case 'diario': return 'Todos los días';
-      default: return 'Seleccione su nivel de actividad';
-    }
-  };
+  const activityItems = [
+    {label: 'Nunca', value: 'nunca'},
+    {label: 'Una vez por semana o menos', value: 'una_vez'},
+    {label: 'Entre 1 y 3 veces por semana', value: 'una_tres'},
+    {label: 'Entre 4 y 6 veces por semana', value: 'cuatro_seis'},
+    {label: 'Todos los días', value: 'diario'}
+  ];
 
   return (
     <KeyboardAvoidingView 
@@ -45,115 +39,105 @@ export default function EditProfileModal() {
     >
       <View style={styles.header}>
         <TouchableOpacity onPress={() => router.back()} style={styles.closeBtn}>
-          <FontAwesome name="times" size={24} color="#666" />
+          <FontAwesome name="chevron-down" size={16} color="#666" />
         </TouchableOpacity>
         <Text style={styles.title}>Editar Perfil</Text>
       </View>
       
-      <ScrollView style={styles.scrollContainer}>
+      <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
         <View style={styles.formContainer}>
-          <Text style={styles.label}>Fecha de Nacimiento</Text>
-          <DateTimePicker
-            value={birthDate}
-            mode="date"
-            onChange={(event: DateTimePickerEvent, date?: Date) => {
-              if (date) setBirthDate(date);
-            }}
-          />
-
-          <Text style={styles.label}>Sexo</Text>
-          <TouchableOpacity 
-            style={styles.input}
-            onPress={() => setShowSexPicker(true)}
-          >
-            <Text>{getSexLabel(sex)}</Text>
-          </TouchableOpacity>
-          {showSexPicker && (
-            <View style={styles.pickerContainer}>
-              <Picker
-                selectedValue={sex}
-                onValueChange={(itemValue: string) => {
-                  setSex(itemValue);
-                  setShowSexPicker(false);
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Información Personal</Text>
+            
+            <Text style={styles.label}>Fecha de Nacimiento</Text>
+            <View style={styles.datePickerContainer}>
+              <DateTimePicker
+                value={birthDate}
+                mode="date"
+                onChange={(event: DateTimePickerEvent, date?: Date) => {
+                  if (date) setBirthDate(date);
                 }}
-                style={styles.picker}
-              >
-                <Picker.Item label="Seleccione su sexo" value="" />
-                <Picker.Item label="Hombre" value="hombre" />
-                <Picker.Item label="Mujer" value="mujer" />
-                <Picker.Item label="Otro" value="otro" />
-              </Picker>
-            </View>
-          )}
-
-          <View style={styles.rowContainer}>
-            <View style={styles.halfInput}>
-              <Text style={styles.label}>Altura (cm)</Text>
-              <TextInput
-                style={styles.input}
-                value={height}
-                onChangeText={setHeight}
-                keyboardType="numeric"
-                placeholder="Ingrese su altura"
+                style={styles.datePicker}
               />
             </View>
 
-            <View style={styles.halfInput}>
-              <Text style={styles.label}>Peso (kg)</Text>
-              <TextInput
-                style={styles.input}
-                value={weight}
-                onChangeText={setWeight}
-                keyboardType="numeric"
-                placeholder="Ingrese su peso"
-              />
+            <Text style={styles.label}>Sexo</Text>
+            <DropDownPicker
+              open={openSex}
+              value={sex}
+              items={sexItems}
+              setOpen={setOpenSex}
+              setValue={setSex}
+              placeholder="Seleccione su sexo"
+              style={styles.dropdown}
+              dropDownContainerStyle={styles.dropdownContainer}
+              placeholderStyle={styles.dropdownPlaceholder}
+            />
+
+            <View style={styles.rowContainer}>
+              <View style={styles.halfInput}>
+                <Text style={styles.label}>Altura (cm)</Text>
+                <TextInput
+                  style={[styles.input, styles.numericInput]}
+                  value={height}
+                  onChangeText={setHeight}
+                  keyboardType="numeric"
+                  placeholder="Altura"
+                  placeholderTextColor="#999"
+                />
+              </View>
+
+              <View style={styles.halfInput}>
+                <Text style={styles.label}>Peso (kg)</Text>
+                <TextInput
+                  style={[styles.input, styles.numericInput]}
+                  value={weight}
+                  onChangeText={setWeight}
+                  keyboardType="numeric"
+                  placeholder="Peso"
+                  placeholderTextColor="#999"
+                />
+              </View>
             </View>
           </View>
 
-          <Text style={styles.label}>Alergias</Text>
-          <TextInput
-            style={styles.textArea}
-            value={allergies}
-            onChangeText={setAllergies}
-            placeholder="Liste sus alergias"
-            multiline
-          />
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Información Médica</Text>
 
-          <Text style={styles.label}>Condiciones Preexistentes</Text>
-          <TextInput
-            style={styles.textArea}
-            value={conditions}
-            onChangeText={setConditions}
-            placeholder="Liste sus condiciones médicas"
-            multiline
-          />
+            <Text style={styles.label}>Nivel de Actividad Física</Text>
+            <DropDownPicker
+              open={openActivity}
+              value={activityLevel}
+              items={activityItems}
+              setOpen={setOpenActivity}
+              setValue={setActivityLevel}
+              placeholder="Seleccione su nivel de actividad"
+              style={styles.dropdown}
+              dropDownContainerStyle={styles.dropdownContainer}
+              placeholderStyle={styles.dropdownPlaceholder}
+            />
+            
+            <Text style={styles.label}>Alergias</Text>
+            <TextInput
+              style={styles.textArea}
+              value={allergies}
+              onChangeText={setAllergies}
+              placeholder="Liste sus alergias (ej: penicilina, maní...)"
+              placeholderTextColor="#999"
+              multiline
+            />
 
-          <Text style={styles.label}>Nivel de Actividad Física</Text>
-          <TouchableOpacity 
-            style={styles.input}
-            onPress={() => setShowActivityPicker(true)}
-          >
-            <Text>{getActivityLabel(activityLevel)}</Text>
-          </TouchableOpacity>
-          {showActivityPicker && (
-            <View style={styles.pickerContainer}>
-              <Picker
-                selectedValue={activityLevel}
-                onValueChange={(itemValue: string) => {
-                  setActivityLevel(itemValue);
-                  setShowActivityPicker(false);
-                }}
-                style={styles.picker}
-              >
-                <Picker.Item label="Seleccione su nivel de actividad" value="" />
-                <Picker.Item label="Nunca" value="nunca" />
-                <Picker.Item label="Una vez por semana o menos" value="una_vez" />
-                <Picker.Item label="Entre 1 y 3 veces por semana" value="una_tres" />
-                <Picker.Item label="Entre 4 y 6 veces por semana" value="cuatro_seis" />
-                <Picker.Item label="Todos los días" value="diario" />
-              </Picker>
-            </View>
-          )}
+            <Text style={styles.label}>Condiciones Preexistentes</Text>
+            <TextInput
+              style={styles.textArea}
+              value={conditions}
+              onChangeText={setConditions}
+              placeholder="Liste sus condiciones médicas (ej: asma, diabetes...)"
+              placeholderTextColor="#999"
+              multiline
+            />
+
+          </View>
 
           <TouchableOpacity style={styles.saveButton}>
             <Text style={styles.saveButtonText}>Guardar Cambios</Text>
@@ -169,23 +153,30 @@ export default function EditProfileModal() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#f8f9fa',
   },
   header: {
-    padding: 20,
+    paddingVertical: 16,
+    paddingHorizontal: 20,
     backgroundColor: '#fff',
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
     flexDirection: 'row',
     alignItems: 'center',
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
   },
   closeBtn: {
     padding: 8,
-    marginRight: 10,
+    marginRight: 16,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
+    color: '#333',
   },
   scrollContainer: {
     flex: 1,
@@ -193,54 +184,102 @@ const styles = StyleSheet.create({
   formContainer: {
     padding: 20,
   },
+  section: {
+    backgroundColor: '#fff',
+    borderRadius: 12,
+    padding: 20,
+    marginBottom: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+    zIndex: 1,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 20,
+  },
   label: {
     fontSize: 16,
     fontWeight: '600',
     marginBottom: 8,
     marginTop: 16,
+    color: '#444',
   },
   input: {
     backgroundColor: '#fff',
-    padding: 12,
-    borderRadius: 8,
+    padding: 14,
+    borderRadius: 10,
     borderWidth: 1,
     borderColor: '#ddd',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  numericInput: {
+    fontSize: 16,
+    color: '#333',
   },
   textArea: {
     backgroundColor: '#fff',
-    padding: 12,
-    borderRadius: 8,
+    padding: 14,
+    borderRadius: 10,
     borderWidth: 1,
     borderColor: '#ddd',
-    height: 100,
+    height: 120,
     textAlignVertical: 'top',
+    fontSize: 16,
+    color: '#333',
   },
-  pickerContainer: {
+  datePickerContainer: {
     backgroundColor: '#fff',
-    borderRadius: 8,
+    borderRadius: 10,
     borderWidth: 1,
     borderColor: '#ddd',
+    overflow: 'hidden',
   },
-  picker: {
-    padding: 0,
+  datePicker: {
+    height: 50,
+  },
+  dropdown: {
+    backgroundColor: '#fff',
+    borderColor: '#ddd',
+    borderRadius: 10,
+    marginBottom: 20,
+  },
+  dropdownContainer: {
+    backgroundColor: '#fff',
+    borderColor: '#ddd',
+    borderRadius: 10,
+  },
+  dropdownPlaceholder: {
+    color: '#999',
   },
   saveButton: {
-    backgroundColor: '#4CAF50',
-    padding: 16,
-    borderRadius: 8,
+    backgroundColor: '#f44',
+    padding: 18,
+    borderRadius: 12,
     alignItems: 'center',
-    marginTop: 32,
-    marginBottom: 20,
+    marginTop: 20,
+    marginBottom: 40,
+    shadowColor: '#f44',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 5,
   },
   saveButtonText: {
     color: '#fff',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
   },
   rowContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: -8, // To compensate for the marginTop in label
+    marginTop: -8,
   },
   halfInput: {
     width: '48%',

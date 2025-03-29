@@ -13,14 +13,6 @@ export default function ProfileScreen() {
         />
         <Text style={styles.name}>John Doe</Text>
         <Text style={styles.email}>john.doe@example.com</Text>
-        
-        <TouchableOpacity 
-          style={styles.editButton}
-          onPress={() => router.push('/editProfileModal')}
-        >
-          <FontAwesome name="edit" size={16} color="#fff" />
-          <Text style={styles.editButtonText}>Edit Profile</Text>
-        </TouchableOpacity>
       </View>
 
       <View style={styles.section}>
@@ -91,7 +83,7 @@ const styles = StyleSheet.create({
   editButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F00',
+    backgroundColor: '#F44',
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 20,
@@ -143,7 +135,7 @@ const styles = StyleSheet.create({
   statNumber: {
     fontSize: 24,
     fontWeight: 'bold',
-    color: '#F00',
+    color: '#F44',
   },
   statLabel: {
     fontSize: 14,

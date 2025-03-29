@@ -33,7 +33,7 @@ export default function MedicalHistoryScreen() {
         {medicalRecords.map(record => (
           <TouchableOpacity key={record.id} style={styles.recordItem}>
             <View style={styles.recordIcon}>
-              <FontAwesome name="file-pdf-o" size={24} color="#e74c3c" />
+              <FontAwesome name="file-pdf-o" size={24} color="#f00" />
             </View>
             <View style={styles.recordInfo}>
               <Text style={styles.recordTitle}>{record.title}</Text>
