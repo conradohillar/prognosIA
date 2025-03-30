@@ -18,7 +18,7 @@ export const signUp = async (email, password) => {
 
     return user;
   } catch (error) {
-    console.error("Error en el registro:", error.message);
+    throw error;
   }
 };
 

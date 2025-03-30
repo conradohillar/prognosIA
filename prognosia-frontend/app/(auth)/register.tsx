@@ -25,7 +25,7 @@ export default function RegisterScreen() {
     setConfirmPassVisible(!confirmPassVisible);
   }
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     // Validate passwords match
     if (password !== confirmPassword) {
       // Show error message
@@ -33,11 +33,12 @@ export default function RegisterScreen() {
       return;
     }
 
-    signUp(email, password);
-    
-    
-
-    router.replace('/(tabs)/profile');
+    try {
+      await signUp(email, password);
+      router.push('/(auth)/register2');
+    } catch (error) {
+      console.log('Error signing up:', error);
+    }
   };
 
   return (
