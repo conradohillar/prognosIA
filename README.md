@@ -2,6 +2,10 @@
 
 Es una aplicación cuyo objetivo principal es brindar una herramienta basada en inteligencia artificial para simplificar y agilizar el proceso de diagnóstico de pacientes. La misma permite centralizar la historia clínica del paciente y luego usa esta información para analizar la salud del paciente con mayor precisión.
 
+# NOTA:
+
+Debido a la limitación temporal se decidió que todas las pruebas sean realizadas en un dispositivo iOS con el fin de lograr consistencia.
+
 ## Instalación y ejecución
 
 Seguí estos pasos para instalar y ejecutar el proyecto:
