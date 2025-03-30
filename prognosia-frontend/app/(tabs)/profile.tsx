@@ -13,20 +13,13 @@ export default function ProfileScreen() {
   const {globalState, setGlobalState} = useGlobalState();
   const [user, setUser] = useState<any>({})
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      const userData = await getUser(globalState.userId);
-      console.log(userData)
-      setUser(userData);
-    };
-    fetchUser();
-  }, []);
+  
 
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.name}>{user.email}</Text>
-        <Text style={styles.email}>john.doe@example.com</Text>
+        <Text style={styles.name}>Conrado Hillar</Text>
+        <Text style={styles.email}>hillarconrado@gmail.com</Text>
       </View>
 
       <View style={styles.separator} />
@@ -36,15 +29,15 @@ export default function ProfileScreen() {
         <View style={styles.infoContainer}>
           <View style={styles.infoRow}>
             <Text style={styles.infoLabel}>Nombre de usuario</Text>
-            <Text style={styles.infoValue}>@johndoe</Text>
+            <Text style={styles.infoValue}>@conradohillar</Text>
           </View>
           <View style={styles.infoRow}>
             <Text style={styles.infoLabel}>Teléfono</Text>
-            <Text style={styles.infoValue}>+1 234 567 8900</Text>
+            <Text style={styles.infoValue}>+54 11 2345 6789</Text>
           </View>
           <View style={styles.infoRow}>
             <Text style={styles.infoLabel}>Ubicación</Text>
-            <Text style={styles.infoValue}>New York, USA</Text>
+            <Text style={styles.infoValue}>Buenos Aires, Argentina</Text>
           </View>
         </View>
       </View>
