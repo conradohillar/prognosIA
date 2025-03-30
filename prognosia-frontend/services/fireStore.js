@@ -3,6 +3,8 @@ import {
   collection,
   getDocs,
   addDoc,
+  setDoc,
+  updateDoc,
 } from "firebase/firestore/lite";
 
 import { db } from "./firebaseConfig";
@@ -80,4 +82,20 @@ async function getUser(user_id) {
   }
 }
 
-export { addUser, addFile, getUser, addUserDoc };
+async function editProfile(user_id, updates) {
+  try {
+    const userRef = doc(db, "users", user_id);
+
+    // Filtrar solo valores definidos para evitar sobreescrituras accidentales
+    const filteredUpdates = Object.fromEntries(
+      Object.entries(updates).filter(([_, v]) => v !== undefined)
+    );
+
+    await updateDoc(userRef, filteredUpdates);
+    console.log("Perfil actualizado con éxito");
+  } catch (error) {
+    console.error("Error actualizando perfil:", error);
+  }
+}
+
+export { addUser, addFile, getUser, addUserDoc, editProfile };

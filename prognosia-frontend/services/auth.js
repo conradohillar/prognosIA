@@ -13,7 +13,6 @@ export const signUp = async (email, password) => {
       password
     );
     const user = userCredential.user;
-    console.log("Usuario registrado:", user);
     await addUserDoc(user.uid);
 
     return user;
@@ -30,9 +29,9 @@ export const signIn = async (email, password) => {
       password
     );
     const user = userCredential.user;
-    console.log("Usuario autenticado:", user);
+    console.log("Usuario logueado:", user);
     return user;
   } catch (error) {
-    console.error("Error en el login:", error.message);
+    throw new Error("Error en el login:", error.message);
   }
 };

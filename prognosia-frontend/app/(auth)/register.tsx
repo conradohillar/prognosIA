@@ -34,7 +34,16 @@ export default function RegisterScreen() {
     }
 
     try {
-      await signUp(email, password);
+      var user = await signUp(email, password);
+
+      setGlobalState({
+        username: "",
+        email: user.email,
+        token: user.refreshToken,
+        userId: user.uid,
+      })
+      
+
       router.push('/(auth)/register2');
     } catch (error) {
       console.log('Error signing up:', error);

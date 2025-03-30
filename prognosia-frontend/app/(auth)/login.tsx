@@ -4,25 +4,47 @@ import { router } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
 import { signIn } from '../../services/auth'
 
+import { useGlobalState } from '../_layout';
+
+
+
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passVisible, setPassVisible] = useState(false);
+  const [error, setError] = useState("");
+  const {globalState, setGlobalState} = useGlobalState();
 
   const handleHideOrShowPass = () => {
     setPassVisible(!passVisible);
   }
 
-  const handleLogin = () => {
-    // TODO: Implement actual login logic here
-    console.log('Login attempted with:', email, password);
-    // On successful login, navigate to main app
-    router.replace('/(tabs)/profile');
+  const handleLogin = async () => {
+    try {
+      var user = await signIn(email, password)
+      setGlobalState({
+        username: "",
+        email: user.email,
+        token: user.refreshToken,
+        userId: user.uid,
+      })
+      router.replace('/(tabs)/profile');
+    }catch (error) {
+      setError("error");
+    
+      return;
+    }
+    
+    
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Bienvenido!</Text>
+
+      {error !== "" && (
+        <Text style={{ color: 'red' }}>Ha ocurrido un error. Por favor, intentá nuevamente.</Text>
+      )}
       
       <View style={styles.inputContainer}>
         <TextInput
