@@ -48,7 +48,7 @@ export default function MedicalHistoryScreen() {
         fileSize: file.size || 'Unknown Size',
       }));
       setMedicalRecords(mappedRecords);
-      console.log('Medical records:', mappedRecords);
+      // console.log('Medical records:', mappedRecords);
     };
     fetchFiles();
   }, []);
@@ -73,11 +73,7 @@ export default function MedicalHistoryScreen() {
         ))}
       </ScrollView>
 
-      <Link href="/addFileModal" asChild>
-        <TouchableOpacity style={styles.floatingButton}>
-          <FontAwesome name="plus" size={24} color="#fff" />
-        </TouchableOpacity>
-      </Link>
+      {/* r */}
     </View>
   );
 }
