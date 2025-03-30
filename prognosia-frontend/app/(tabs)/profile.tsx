@@ -25,11 +25,7 @@ export default function ProfileScreen() {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
-        <Image 
-          source={{uri: 'https://via.placeholder.com/100'}}
-          style={styles.avatar}
-        />
-        <Text style={styles.name}>{user.name}</Text>
+        <Text style={styles.name}>{user.email}</Text>
         <Text style={styles.email}>john.doe@example.com</Text>
       </View>
 
