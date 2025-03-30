@@ -52,7 +52,6 @@ function RootLayoutNav() {
         <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
         <Stack.Screen name="addFileModal" options={{ presentation: 'modal', headerShown: false }} />
         <Stack.Screen name="editProfileModal" options={{ presentation: 'modal', headerShown: false }} />
-        <Stack.Screen name="suggestions/nextControls" options={{ headerShown: false }} />
         <Stack.Screen name="suggestions/tendencies" options={{ headerShown: false }} />
         <Stack.Screen name="suggestions/preventiveControls" options={{ headerShown: false }} />
       </Stack>

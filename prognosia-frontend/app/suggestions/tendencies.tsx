@@ -1,7 +1,9 @@
-import { StyleSheet, ScrollView, Dimensions } from 'react-native';
+import { StyleSheet, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { LineChart } from 'react-native-chart-kit';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { router } from 'expo-router';
 
 export default function TendenciesScreen() {
   // Datos de ejemplo - estos vendrían de la API/base de datos
@@ -27,85 +29,94 @@ export default function TendenciesScreen() {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <FontAwesome5 name="chart-line" size={20} color="#999" />
+        <TouchableOpacity onPress={() => router.back()} style={styles.closeBtn}>
+          <FontAwesome5 name="chevron-left" size={16} color="#666" />
+        </TouchableOpacity>
         <Text style={styles.title}>Análisis de Tendencias</Text>
       </View>
+      <ScrollView>
+        <View style={styles.chartContainer}>
+          <Text style={styles.chartTitle}>Presión Arterial Sistólica</Text>
+          <LineChart
+            data={presionArterialData}
+            width={Dimensions.get('window').width - 40}
+            height={220}
+            chartConfig={{
+              backgroundColor: '#fff',
+              backgroundGradientFrom: '#fff',
+              backgroundGradientTo: '#fff',
+              decimalPlaces: 0,
+              color: (opacity = 1) => `rgba(244, 67, 54, ${opacity})`,
+              labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+              style: {
+                borderRadius: 16
+              }
+            }}
+            bezier
+            style={styles.chart}
+          />
+        </View>
 
-      <View style={styles.chartContainer}>
-        <Text style={styles.chartTitle}>Presión Arterial Sistólica</Text>
-        <LineChart
-          data={presionArterialData}
-          width={Dimensions.get('window').width - 40}
-          height={220}
-          chartConfig={{
-            backgroundColor: '#fff',
-            backgroundGradientFrom: '#fff',
-            backgroundGradientTo: '#fff',
-            decimalPlaces: 0,
-            color: (opacity = 1) => `rgba(244, 67, 54, ${opacity})`,
-            labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-            style: {
-              borderRadius: 16
-            }
-          }}
-          bezier
-          style={styles.chart}
-        />
-      </View>
+        <View style={styles.chartContainer}>
+          <Text style={styles.chartTitle}>Peso (kg)</Text>
+          <LineChart
+            data={pesoData}
+            width={Dimensions.get('window').width - 40}
+            height={220}
+            chartConfig={{
+              backgroundColor: '#fff',
+              backgroundGradientFrom: '#fff',
+              backgroundGradientTo: '#fff',
+              decimalPlaces: 1,
+              color: (opacity = 1) => `rgba(33, 150, 243, ${opacity})`,
+              labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+              style: {
+                borderRadius: 16
+              }
+            }}
+            bezier
+            style={styles.chart}
+          />
+        </View>
 
-      <View style={styles.chartContainer}>
-        <Text style={styles.chartTitle}>Peso (kg)</Text>
-        <LineChart
-          data={pesoData}
-          width={Dimensions.get('window').width - 40}
-          height={220}
-          chartConfig={{
-            backgroundColor: '#fff',
-            backgroundGradientFrom: '#fff',
-            backgroundGradientTo: '#fff',
-            decimalPlaces: 1,
-            color: (opacity = 1) => `rgba(33, 150, 243, ${opacity})`,
-            labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-            style: {
-              borderRadius: 16
-            }
-          }}
-          bezier
-          style={styles.chart}
-        />
-      </View>
-
-      <View style={[styles.chartContainer, { marginBottom: 20 }]}>
-        <Text style={styles.chartTitle}>Glucemia (mg/dL)</Text>
-        <LineChart
-          data={glucemiaData}
-          width={Dimensions.get('window').width - 40}
-          height={220}
-          chartConfig={{
-            backgroundColor: '#fff',
-            backgroundGradientFrom: '#fff',
-            backgroundGradientTo: '#fff',
-            decimalPlaces: 0,
-            color: (opacity = 1) => `rgba(76, 175, 80, ${opacity})`,
-            labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-            style: {
-              borderRadius: 16
-            }
-          }}
-          bezier
-          style={styles.chart}
-        />
-      </View>
-    </ScrollView>
+        <View style={[styles.chartContainer, { marginBottom: 20 }]}>
+          <Text style={styles.chartTitle}>Glucemia (mg/dL)</Text>
+          <LineChart
+            data={glucemiaData}
+            width={Dimensions.get('window').width - 40}
+            height={220}
+            chartConfig={{
+              backgroundColor: '#fff',
+              backgroundGradientFrom: '#fff',
+              backgroundGradientTo: '#fff',
+              decimalPlaces: 0,
+              color: (opacity = 1) => `rgba(76, 175, 80, ${opacity})`,
+              labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+              style: {
+                borderRadius: 16
+              }
+            }}
+            bezier
+            style={styles.chart}
+          />
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: '#fff',
+  },
+  closeBtn: {
+    padding: 8,
+    position: 'absolute',
+    left: 16,
+    zIndex: 1,
   },
   header: {
     flexDirection: 'row',

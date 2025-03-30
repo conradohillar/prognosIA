@@ -16,6 +16,8 @@ export default function ProfileScreen() {
         <Text style={styles.email}>john.doe@example.com</Text>
       </View>
 
+      <View style={styles.separator} />
+
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Información personal</Text>
         <View style={styles.infoContainer}>
@@ -33,6 +35,8 @@ export default function ProfileScreen() {
           </View>
         </View>
       </View>
+
+      <View style={styles.separator} />
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Sugerencias</Text>
@@ -82,7 +86,7 @@ const styles = StyleSheet.create({
   header: {
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: '#f5f5f5',
   },
   avatar: {
     width: 100,
@@ -113,10 +117,15 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
   },
+  separator: {
+    height: 1,
+    backgroundColor: '#ccc',
+    marginHorizontal: 20,
+  },
   section: {
     marginTop: 20,
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: '#f5f5f5',
   },
   sectionTitle: {
     fontSize: 20,
@@ -126,13 +135,13 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     gap: 15,
-    backgroundColor: '#fff'
+    backgroundColor: '#f5f5f5'
   },
   infoRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#fff'
+    backgroundColor: '#f5f5f5'
   },
   infoLabel: {
     fontSize: 16,
@@ -144,6 +153,7 @@ const styles = StyleSheet.create({
     color: '#000',
   },
   suggestionsContainer: {
+    backgroundColor: '#f5f5f5',
     gap: 12,
   },
   suggestionCard: {
@@ -165,7 +175,9 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: '#fff5f5',
+    backgroundColor: '#f5f5f5',
+    borderWidth: 0.5,
+    borderColor: '#aaa',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 16,
@@ -173,6 +185,7 @@ const styles = StyleSheet.create({
   suggestionContent: {
     flex: 1,
     marginRight: 12,
+    backgroundColor: '#fff'
   },
   suggestionTitle: {
     fontSize: 16,
@@ -183,5 +196,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#666',
     lineHeight: 18,
+    backgroundColor: '#fff'
   },
 });

@@ -4,13 +4,13 @@ import { Text, View } from '@/components/Themed';
 import { FontAwesome5 } from '@expo/vector-icons';
 
 export default function ChatScreen() {
+
   const [sintomas, setSintomas] = useState('');
   const [medicamentos, setMedicamentos] = useState('');
-
+  
   const enviarInformacion = () => {
     if (sintomas.trim()) {
-      // Aquí irá la lógica para procesar la información
-      console.log({ sintomas, medicamentos });
+      console.log('Enviando información...' + sintomas + ' ' + medicamentos); 
     }
   };
 
@@ -98,6 +98,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     backgroundColor: '#fff',
     borderRadius: 16,
+    
     padding: 16,
     shadowColor: '#000',
     shadowOffset: {
@@ -123,6 +124,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#f8f8f8',
     borderRadius: 12,
     padding: 16,
+    borderWidth: 0.5,
+    borderColor: '#aaa',
     fontSize: 16,
     color: '#333',
     minHeight: 150,
@@ -131,6 +134,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#f8f8f8',
     borderRadius: 12,
     padding: 16,
+    borderWidth: 0.5,
+    borderColor: '#aaa',
     fontSize: 16,
     color: '#333',
     minHeight: 100,
