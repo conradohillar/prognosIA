@@ -4,7 +4,12 @@ import { router } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
 import { signUp } from '../../services/auth';
 
+import { useGlobalState } from '../_layout';
+
 export default function RegisterScreen() {
+  
+  const {globalState, setGlobalState} = useGlobalState();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
