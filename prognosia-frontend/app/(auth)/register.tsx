@@ -2,6 +2,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-nativ
 import { useState } from 'react';
 import { router } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
+import { signUp } from '../../services/auth';
 
 export default function RegisterScreen() {
   const [email, setEmail] = useState('');
@@ -27,9 +28,10 @@ export default function RegisterScreen() {
       return;
     }
 
-    // TODO: Implement actual registration logic here
-    console.log('Registration attempted with:', email, password);
-    // On successful registration, navigate to main app
+    signUp(email, password);
+    
+    
+
     router.replace('/(tabs)/profile');
   };
 

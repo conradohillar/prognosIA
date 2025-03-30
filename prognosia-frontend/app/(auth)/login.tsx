@@ -2,6 +2,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-nativ
 import { useState } from 'react';
 import { router } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
+import { signIn } from '../../services/auth'
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');

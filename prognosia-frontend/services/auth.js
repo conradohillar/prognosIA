@@ -15,6 +15,7 @@ export const signUp = async (email, password) => {
     const user = userCredential.user;
     console.log("Usuario registrado:", user);
     await addUserDoc(user.uid);
+
     return user;
   } catch (error) {
     console.error("Error en el registro:", error.message);

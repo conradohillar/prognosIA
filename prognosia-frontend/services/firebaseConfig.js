@@ -14,4 +14,7 @@ export const auth = initializeAuth(app, {
   persistence: getReactNativePersistence(AsyncStorage),
 });
 export const db = getFirestore(app, "prognosia");
-export const storage = getStorage(app);
+export const storage = getStorage(
+  app,
+  "gs://prognosia-d904c.firebasestorage.app"
+);

@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { Platform, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { Platform, StyleSheet, TouchableOpacity, Image, ActivityIndicator } from 'react-native';
 import * as DocumentPicker from 'expo-document-picker';
 import { Text, View } from '@/components/Themed';
 import { router } from 'expo-router';
@@ -7,12 +7,14 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useState } from 'react';
 import { DocumentPickerAsset } from 'expo-document-picker';
 import { useGlobalState } from "./_layout";
+import { uploadToFirebase } from '../services/storage';
 
 export default function AddFileModal() {
   const [selectedFile, setSelectedFile] = useState<DocumentPickerAsset | null>(null);
   const [pdfUri, setPdfUri] = useState<string | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
 
-  const { globalState } = useGlobalState();
+  // const { globalState } = useGlobalState();
 
   const pickDocument = async () => {
     try {
@@ -36,15 +38,28 @@ export default function AddFileModal() {
 
   const uploadFile = async () => {
     if (!selectedFile) return;
-
-    const response = await fetch(selectedFile.uri);
-    const blob = await response.blob();
+    
+    setIsUploading(true);
 
     try {
-      const downloadURL = await uploadToFirebase(globalState.userId, blob);
-    }
+      const response = await fetch(selectedFile.uri);
+      console.log('Response:', response);
+      const blob = await response.blob();
+      console.log('Blob:', blob);
 
-  };
+      const downloadURL = await uploadToFirebase("asjdgKASDJGASDKFYF", blob, selectedFile.name);
+      console.log('File uploaded to Firebase:', downloadURL);
+      
+      // Close modal after successful upload
+      router.back();
+    }
+    catch (err) {
+      console.error('Error uploading file:', err);
+    }
+    finally {
+      setIsUploading(false);
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -78,10 +93,15 @@ export default function AddFileModal() {
           </View>
 
           <TouchableOpacity 
-            style={styles.confirmButton}
+            style={[styles.confirmButton, isUploading && styles.confirmButtonDisabled]}
             onPress={uploadFile}
+            disabled={isUploading}
           >
-            <Text style={styles.confirmButtonText}>Confirmar</Text>
+            {isUploading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={styles.confirmButtonText}>Confirmar</Text>
+            )}
           </TouchableOpacity>
         </View>
       )}
@@ -168,6 +188,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 40,
     paddingVertical: 15,
     borderRadius: 25,
+    minWidth: 120,
+    alignItems: 'center',
+  },
+  confirmButtonDisabled: {
+    opacity: 0.7,
   },
   confirmButtonText: {
     color: '#fff',
