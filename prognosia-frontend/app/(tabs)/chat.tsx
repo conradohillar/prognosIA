@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Text, View } from '@/components/Themed';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import axios from 'axios';
 
 export default function ChatScreen() {
 
@@ -13,7 +14,19 @@ export default function ChatScreen() {
   
   const enviarInformacion = () => {
     // Procesar la información y navegar a la pantalla de resultados
-    router.replace('/analysing');
+    if (sintomas.trim()) {
+      axios.post('http://localhost:8000/suggest', {
+        sintomas,
+        medicamentos
+      })
+      .then(response => {
+        console.log('Respuesta del servidor:', response.data);
+        router.replace('/analysing');
+      })
+      .catch(error => {
+        console.error('Error al enviar información:', error);
+      });
+    }
   };
 
   return (
