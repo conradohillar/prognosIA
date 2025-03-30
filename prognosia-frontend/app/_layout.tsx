@@ -6,7 +6,7 @@ import { useEffect, createContext, useContext, useState } from 'react';
 import 'react-native-reanimated';
 
 const GlobalStateContext = createContext<{
-  globalState: { username: string; token: string | null; email: string | null; userId: string | null };
+  globalState: { username: string; token: string | null; email: string | null; userId: string | null;  };
   setGlobalState: React.Dispatch<
     React.SetStateAction<{
       username: string;

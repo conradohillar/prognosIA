@@ -4,7 +4,21 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { router } from 'expo-router';
 
+import { getUser } from '../../services/fireStore';
+import { useEffect, useState } from 'react';
+
 export default function ProfileScreen() {
+
+  const [user, setUser] = useState<any|null>({})
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const user = await getUser();
+      setUser(user);
+    }
+    fetchUser();
+  }, []);
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
@@ -12,8 +26,8 @@ export default function ProfileScreen() {
           source={{uri: 'https://via.placeholder.com/100'}}
           style={styles.avatar}
         />
-        <Text style={styles.name}>John Doe</Text>
-        <Text style={styles.email}>john.doe@example.com</Text>
+        <Text style={styles.name}>{user.name}</Text>
+        <Text style={styles.email}>{user.email}</Text>
       </View>
 
       <View style={styles.separator} />
@@ -22,16 +36,16 @@ export default function ProfileScreen() {
         <Text style={styles.sectionTitle}>Información personal</Text>
         <View style={styles.infoContainer}>
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Nombre de usuario</Text>
-            <Text style={styles.infoValue}>@johndoe</Text>
+            <Text style={styles.infoLabel}>{user.name}</Text>
+            <Text style={styles.infoValue}>{user.email}</Text>
           </View>
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Teléfono</Text>
-            <Text style={styles.infoValue}>+1 234 567 8900</Text>
+            <Text style={styles.infoLabel}>Genero</Text>
+            <Text style={styles.infoValue}>{user}</Text>
           </View>
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Ubicación</Text>
-            <Text style={styles.infoValue}>New York, USA</Text>
+            <Text style={styles.infoLabel}>Fecha de nacimiento</Text>
+            <Text style={styles.infoValue}>{user.birth_date}</Text>
           </View>
         </View>
       </View>
