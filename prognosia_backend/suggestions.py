@@ -27,9 +27,6 @@ if len(sys.argv) < 3:
     print("⚠️ Uso: python suggestions.py \"medicamentos\" \"sintomas\"")
     sys.exit(1)
 
-medicamentos = sys.argv[1]
-sintomas = sys.argv[2]
-
 # Función para detectar imágenes en el directorio de estudios
 def detectar_imagenes():
     return [f for f in os.listdir(ESTUDIOS_DIR) if f.lower().endswith((".png", ".jpg", ".jpeg"))]
@@ -173,20 +170,27 @@ def sugerir_estudios(datos_medicos, medicamentos, sintomas, resumen_estudios, re
     return response.choices[0].message.content
 
 # Ejecutar el programa
-metadata = obtener_metadata()
-datos_paciente = cargar_datos_paciente()
+def suggest(medicamentos, sintomas):
 
-actualizar_resumen_estudios(metadata)
-actualizar_resumen_historia(metadata)
+    if not medicamentos:
+        medicamentos = ""
+    if not sintomas:
+        sintomas = ""
 
-with open(RESUMEN_ESTUDIOS, "r", encoding="utf-8") as file:
-    resumen_estudios = generar_resumen_ia(file.read())
+    metadata = obtener_metadata()
+    datos_paciente = cargar_datos_paciente()
 
-with open(RESUMEN_HISTORIA, "r", encoding="utf-8") as file:
-    resumen_historia = generar_resumen_ia(file.read())
+    actualizar_resumen_estudios(metadata)
+    actualizar_resumen_historia(metadata)
 
-resultado = sugerir_estudios(datos_paciente, medicamentos, sintomas, resumen_estudios, resumen_historia)
-guardar_sugerencia(resultado, medicamentos, sintomas)
+    with open(RESUMEN_ESTUDIOS, "r", encoding="utf-8") as file:
+        resumen_estudios = generar_resumen_ia(file.read())
 
-print("\n📋 **Estudios sugeridos:**\n")
-print(resultado)
+    with open(RESUMEN_HISTORIA, "r", encoding="utf-8") as file:
+        resumen_historia = generar_resumen_ia(file.read())
+
+    resultado = sugerir_estudios(datos_paciente, medicamentos, sintomas, resumen_estudios, resumen_historia)
+    guardar_sugerencia(resultado, medicamentos, sintomas)
+
+    print("\n📋 **Estudios sugeridos:**\n")
+    print(resultado)
