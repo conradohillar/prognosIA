@@ -5,6 +5,9 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { getFiles} from './../../services/storage'
 
+import axios from 'axios';
+import * as FileSystem from 'expo-file-system';
+
 export default function ChatScreen() {
 
   const [sintomas, setSintomas] = useState('');
@@ -20,9 +23,49 @@ export default function ChatScreen() {
 
   useEffect(() => {
     const downloadFiles = async () => {
-
-    }
-  },[]);
+      try {
+        // Directorio en el sistema de archivos del dispositivo
+        const dirPath = FileSystem.documentDirectory + "ai_services/estudios/";
+  
+        // Obtén los archivos (supongo que getFiles() devuelve una lista de archivos con la URL)
+        const files = await getFiles();
+  
+        // Verifica si el directorio existe, si no lo crea
+        if (!FileSystem.documentDirectory) {
+          throw new Error("Document directory is not available.");
+        }
+        const dirInfo = await FileSystem.readDirectoryAsync(FileSystem.documentDirectory);
+        if (!dirInfo.includes("ai_services")) {
+          await FileSystem.makeDirectoryAsync(dirPath, { intermediates: true });
+        }
+  
+        // Descarga los archivos
+        for (const item of files) {
+          const savePath = dirPath + item.name;
+          
+          // Obtén la respuesta del archivo
+          const response = await axios({
+            url: item.url,
+            method: 'GET',
+            responseType: 'blob', // Usamos 'blob' para manejar datos binarios
+          });
+  
+          // Guarda el archivo usando FileSystem
+          await FileSystem.writeAsStringAsync(savePath, response.data, {
+            encoding: FileSystem.EncodingType.Base64, // Guarda como base64
+          });
+  
+          console.log("Downloaded: ", item.name);
+        }
+  
+        console.log(files);
+      } catch (error) {
+        console.error("Error:", error);
+      }
+    };
+  
+    downloadFiles();
+  }, []);
   
   return (
     <KeyboardAvoidingView 
