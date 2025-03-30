@@ -32,21 +32,22 @@ export default function EditProfile() {
   ];
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.closeBtn}>
-          <FontAwesome name="chevron-down" size={16} color="#666" />
-        </TouchableOpacity>
-        <Text style={styles.title}>Editar Perfil</Text>
-      </View>
-      
-      <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
+    <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
         <View style={styles.formContainer}>
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Información Personal</Text>
             
+            <Text style={styles.label}>Nombre</Text>
+            <TextInput
+                  style={[styles.input, styles.numericInput]}
+                  value={height}
+                  onChangeText={setHeight}
+                  keyboardType="numeric"
+                  placeholder="Nombre"
+                  placeholderTextColor="#999"
+                />
             <Text style={styles.label}>Fecha de Nacimiento</Text>
-            <View style={styles.datePickerContainer}>
+
               <DateTimePicker
                 value={birthDate}
                 mode="date"
@@ -55,7 +56,7 @@ export default function EditProfile() {
                 }}
                 style={styles.datePicker}
               />
-            </View>
+
 
             <Text style={styles.label}>Sexo</Text>
             <DropDownPicker
@@ -140,7 +141,6 @@ export default function EditProfile() {
           </TouchableOpacity>
         </View>
       </ScrollView>
-    </View>
   );
 }
 
@@ -173,6 +173,7 @@ const styles = StyleSheet.create({
     color: '#333',
   },
   scrollContainer: {
+    backgroundColor: '#ffffff',
     flex: 1,
   },
   formContainer: {
@@ -259,7 +260,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 20,
     marginBottom: 40,
-    shadowColor: '#f44',
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 6,

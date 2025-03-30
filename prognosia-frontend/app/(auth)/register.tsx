@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { useState } from 'react';
 import { router } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
@@ -8,6 +8,7 @@ export default function RegisterScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const [passVisible, setPassVisible] = useState(false);
   const [confirmPassVisible, setConfirmPassVisible] = useState(false);
@@ -28,11 +29,14 @@ export default function RegisterScreen() {
       return;
     }
 
+    setLoading(true);
     try {
       await signUp(email, password);
-      router.push('/(auth)/register2');
+      router.replace('/(auth)/register2');
     } catch (error) {
       console.log('Error signing up:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -97,8 +101,13 @@ export default function RegisterScreen() {
       <TouchableOpacity 
         style={styles.registerButton}
         onPress={handleRegister}
+        disabled={loading}
       >
-        <Text style={styles.registerButtonText}>Registrarse</Text>
+        {loading ? (
+          <ActivityIndicator color="#fff" />
+        ) : (
+          <Text style={styles.registerButtonText}>Registrarse</Text>
+        )}
       </TouchableOpacity>
 
       <TouchableOpacity 

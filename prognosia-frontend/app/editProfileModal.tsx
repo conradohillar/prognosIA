@@ -38,7 +38,15 @@ export default function EditProfileModal() {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={styles.container}
     >
+      <View style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => router.back()} style={styles.closeBtn}>
+          <FontAwesome name="chevron-down" size={16} color="#666" />
+        </TouchableOpacity>
+        <Text style={styles.title}>Editar Perfil</Text>
+      </View>
       <EditProfile />
+    </View>
 
       <StatusBar style={Platform.OS === 'ios' ? 'light' : 'auto'} />
     </KeyboardAvoidingView>
@@ -49,5 +57,28 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f8f9fa',
+  },
+  header: {
+    paddingVertical: 16,
+    paddingHorizontal: 20,
+    backgroundColor: '#fff',
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+    flexDirection: 'row',
+    alignItems: 'center',
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+  },
+  closeBtn: {
+    padding: 8,
+    marginRight: 16,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333',
   },
 });
