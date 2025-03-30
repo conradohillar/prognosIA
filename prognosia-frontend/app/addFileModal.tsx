@@ -14,7 +14,7 @@ export default function AddFileModal() {
   const [pdfUri, setPdfUri] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
 
-  // const { globalState } = useGlobalState();
+  const { globalState } = useGlobalState();
 
   const pickDocument = async () => {
     try {
@@ -47,7 +47,7 @@ export default function AddFileModal() {
       const blob = await response.blob();
       console.log('Blob:', blob);
 
-      const downloadURL = await uploadToFirebase("asjdgKASDJGASDKFYF", blob, selectedFile.name);
+      const downloadURL = await uploadToFirebase(globalState.userId, blob, selectedFile.name);
       console.log('File uploaded to Firebase:', downloadURL);
       
       // Close modal after successful upload

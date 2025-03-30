@@ -11,22 +11,11 @@ export default function ChatScreen() {
 
   const router = useRouter();
   
-  // const enviarInformacion = () => {
-  //   // Procesar la información y navegar a la pantalla de resultados
-  //   if (sintomas.trim()) {
-  //     axios.post('http://localhost:8000/suggest', {
-  //       sintomas,
-  //       medicamentos
-  //     })
-  //     .then(response => {
-  //       console.log('Respuesta del servidor:', response.data);
-  //       router.replace('/analysing');
-  //     })
-  //     .catch(error => {
-  //       console.error('Error al enviar información:', error);
-  //     });
-  //   }
-  // };
+  const enviarInformacion = () => {
+    // Procesar la información y navegar a la pantalla de resultados
+    if (sintomas.trim()) {
+    }
+  };
 
   return (
     <KeyboardAvoidingView 

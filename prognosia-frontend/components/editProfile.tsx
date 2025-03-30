@@ -1,4 +1,4 @@
-import { StyleSheet, ScrollView, TextInput, TouchableOpacity } from 'react-native';
+import { StyleSheet, FlatList, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { useState } from 'react';
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
@@ -7,7 +7,6 @@ import { FontAwesome } from '@expo/vector-icons';
 import { router } from 'expo-router';
 import { editProfile } from '@/services/fireStore';
 import { useGlobalState } from '../app/_layout'
-
 
 export default function EditProfile() {
   const [name, setName] = useState('');
@@ -20,18 +19,19 @@ export default function EditProfile() {
   const [activityLevel, setActivityLevel] = useState('');
   const [openSex, setOpenSex] = useState(false);
   const [openActivity, setOpenActivity] = useState(false);
+  const [loading, setLoading] = useState(false);
   const {globalState, setGlobalState} = useGlobalState();
 
-
-
   const handleSubmit = async () => {
+    setLoading(true);
     try{
-      editProfile(globalState.userId,name,sex,weight,height,activityLevel,allergies,conditions,birthDate);
-
+      await editProfile(globalState.userId,name,sex,weight,height,activityLevel,allergies,conditions,birthDate);
       router.replace('/(tabs)/profile');
     }catch (error) {
       console.log('Error al guardar cambios:', error);
       return;
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -49,115 +49,127 @@ export default function EditProfile() {
     {label: 'Todos los días', value: 'Todos los días'}
   ];
 
-  return (
-    <ScrollView style={styles.scrollContainer} showsVerticalScrollIndicator={false}>
-        <View style={styles.formContainer}>
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Información Personal</Text>
-            
-            <Text style={styles.label}>Nombre</Text>
-            <TextInput
-                  style={[styles.input, styles.numericInput]}
-                  value={name}
-                  onChangeText={setName}
-                  placeholder="Nombre"
-                  placeholderTextColor="#999"
-                />
-            <Text style={styles.label}>Fecha de Nacimiento</Text>
-
-              <DateTimePicker
-                value={birthDate}
-                mode="date"
-                onChange={(event: DateTimePickerEvent, date?: Date) => {
-                  if (date) setBirthDate(date);
-                }}
-                style={styles.datePicker}
+  const renderContent = () => {
+    return (
+      <View style={styles.formContainer}>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Información Personal</Text>
+          
+          <Text style={styles.label}>Nombre</Text>
+          <TextInput
+                style={[styles.input, styles.numericInput]}
+                value={name}
+                onChangeText={setName}
+                placeholder="Nombre"
+                placeholderTextColor="#999"
               />
+          <Text style={styles.label}>Fecha de Nacimiento</Text>
 
-
-            <Text style={styles.label}>Sexo</Text>
-            <DropDownPicker
-              open={openSex}
-              value={sex}
-              items={sexItems}
-              setOpen={setOpenSex}
-              setValue={setSex}
-              placeholder="Seleccione su sexo"
-              style={styles.dropdown}
-              dropDownContainerStyle={styles.dropdownContainer}
-              placeholderStyle={styles.dropdownPlaceholder}
+            <DateTimePicker
+              value={birthDate}
+              mode="date"
+              onChange={(event: DateTimePickerEvent, date?: Date) => {
+                if (date) setBirthDate(date);
+              }}
+              style={styles.datePicker}
             />
 
-            <View style={styles.rowContainer}>
-              <View style={styles.halfInput}>
-                <Text style={styles.label}>Altura (cm)</Text>
-                <TextInput
-                  style={[styles.input, styles.numericInput]}
-                  value={height}
-                  onChangeText={setHeight}
-                  keyboardType="numeric"
-                  placeholder="Altura"
-                  placeholderTextColor="#999"
-                />
-              </View>
+          <Text style={styles.label}>Sexo</Text>
+          <DropDownPicker
+            open={openSex}
+            value={sex}
+            items={sexItems}
+            setOpen={setOpenSex}
+            setValue={setSex}
+            placeholder="Seleccione su sexo"
+            style={styles.dropdown}
+            dropDownContainerStyle={styles.dropdownContainer}
+            placeholderStyle={styles.dropdownPlaceholder}
+          />
 
-              <View style={styles.halfInput}>
-                <Text style={styles.label}>Peso (kg)</Text>
-                <TextInput
-                  style={[styles.input, styles.numericInput]}
-                  value={weight}
-                  onChangeText={setWeight}
-                  keyboardType="numeric"
-                  placeholder="Peso"
-                  placeholderTextColor="#999"
-                />
-              </View>
+          <View style={styles.rowContainer}>
+            <View style={styles.halfInput}>
+              <Text style={styles.label}>Altura (cm)</Text>
+              <TextInput
+                style={[styles.input, styles.numericInput]}
+                value={height}
+                onChangeText={setHeight}
+                keyboardType="numeric"
+                placeholder="Altura"
+                placeholderTextColor="#999"
+              />
+            </View>
+
+            <View style={styles.halfInput}>
+              <Text style={styles.label}>Peso (kg)</Text>
+              <TextInput
+                style={[styles.input, styles.numericInput]}
+                value={weight}
+                onChangeText={setWeight}
+                keyboardType="numeric"
+                placeholder="Peso"
+                placeholderTextColor="#999"
+              />
             </View>
           </View>
-
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Información Médica</Text>
-
-            <Text style={styles.label}>Nivel de Actividad Física</Text>
-            <DropDownPicker
-              open={openActivity}
-              value={activityLevel}
-              items={activityItems}
-              setOpen={setOpenActivity}
-              setValue={setActivityLevel}
-              placeholder="Seleccione su nivel de actividad"
-              style={styles.dropdown}
-              dropDownContainerStyle={styles.dropdownContainer}
-              placeholderStyle={styles.dropdownPlaceholder}
-            />
-            
-            <Text style={styles.label}>Alergias</Text>
-            <TextInput
-              style={styles.textArea}
-              value={allergies}
-              onChangeText={setAllergies}
-              placeholder="Liste sus alergias (ej: penicilina, maní...)"
-              placeholderTextColor="#999"
-              multiline
-            />
-
-            <Text style={styles.label}>Condiciones Preexistentes</Text>
-            <TextInput
-              style={styles.textArea}
-              value={conditions}
-              onChangeText={setConditions}
-              placeholder="Liste sus condiciones médicas (ej: asma, diabetes...)"
-              placeholderTextColor="#999"
-              multiline
-            />
-
-          </View>
-
-          <TouchableOpacity onPress={handleSubmit} style={styles.saveButton}>
-            <Text style={styles.saveButtonText}>Guardar Cambios</Text>
-          </TouchableOpacity>
         </View>
-      </ScrollView>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Información Médica</Text>
+
+          <Text style={styles.label}>Nivel de Actividad Física</Text>
+          <DropDownPicker
+            open={openActivity}
+            value={activityLevel}
+            items={activityItems}
+            setOpen={setOpenActivity}
+            setValue={setActivityLevel}
+            placeholder="Seleccione su nivel de actividad"
+            style={styles.dropdown}
+            dropDownContainerStyle={styles.dropdownContainer}
+            placeholderStyle={styles.dropdownPlaceholder}
+          />
+          
+          <Text style={styles.label}>Alergias</Text>
+          <TextInput
+            style={styles.textArea}
+            value={allergies}
+            onChangeText={setAllergies}
+            placeholder="Liste sus alergias (ej: penicilina, maní...)"
+            placeholderTextColor="#999"
+            multiline
+          />
+
+          <Text style={styles.label}>Condiciones Preexistentes</Text>
+          <TextInput
+            style={styles.textArea}
+            value={conditions}
+            onChangeText={setConditions}
+            placeholder="Liste sus condiciones médicas (ej: asma, diabetes...)"
+            placeholderTextColor="#999"
+            multiline
+          />
+
+        </View>
+
+        <TouchableOpacity onPress={handleSubmit} style={styles.saveButton} disabled={loading}>
+          {loading ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={styles.saveButtonText}>Guardar Cambios</Text>
+          )}
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
+  return (
+    <FlatList
+      data={[{ key: 'content' }]}
+      renderItem={() => renderContent()}
+      style={styles.scrollContainer}
+      showsVerticalScrollIndicator={false}
+    />
   );
 }
 
