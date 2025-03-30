@@ -8,9 +8,11 @@ import * as Sharing from 'expo-sharing';
 import * as Print from 'expo-print';
 import showdown from 'showdown';
 import * as FileSystem from 'expo-file-system';
+import { useLocalSearchParams } from 'expo-router';
 
 export default function ResultsScreen() {
   const router = useRouter();
+  const { answer } = useLocalSearchParams();
 
   const handleDownload = async () => {
     try {
@@ -23,7 +25,7 @@ export default function ResultsScreen() {
 
       // Convertir Markdown a HTML
       const converter = new showdown.Converter();
-      const html = converter.makeHtml(reporteMarkdown);
+      const html = converter.makeHtml(Array.isArray(answer) ? answer.join('') : answer);
 
       // Template HTML con estilos
       const htmlContent = `
@@ -96,45 +98,15 @@ export default function ResultsScreen() {
     }
   };
 
-  // Este sería el reporte generado por la IA en formato Markdown
-  const reporteMarkdown = `
-# Reporte de Análisis Médico Preliminar
-
-## Información General
-**Fecha de Análisis**: ${new Date().toLocaleDateString()}
-**Tipo de Reporte**: Análisis Preliminar Automatizado
-
-## Resumen de Síntomas Reportados
-- Dolor de cabeza intenso
-- Fatiga persistente
-- Mareos ocasionales
-
-## Análisis Preliminar
-Los síntomas descritos, en conjunto con el historial médico del paciente, sugieren un posible cuadro de migraña tensional.
-
-### Factores de Riesgo Identificados
-- Antecedentes familiares de migraña
-- Niveles elevados de estrés
-- Patrones de sueño irregulares
-
-## Recomendaciones
-1. Consulta prioritaria con neurólogo
-2. Mantener un diario de síntomas
-3. Evitar desencadenantes identificados
-
-## Notas Adicionales
-Este reporte es generado por IA y no reemplaza el diagnóstico profesional.
-`;
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity 
+        {/* <TouchableOpacity 
           style={styles.backButton}
-          onPress={() => router.replace('/chat')}
+          onPress={() => router.replace('/(tabs)/chat')}
         >
           <FontAwesome5 name="arrow-left" size={20} color="#333" />
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <Text style={styles.headerTitle}>Reporte Médico</Text>
       </View>
       
@@ -152,7 +124,7 @@ Este reporte es generado por IA y no reemplaza el diagnóstico profesional.
               strong: styles.strong
             }}
           >
-            {reporteMarkdown}
+            {answer}
           </Markdown>
         </View>
       </ScrollView>

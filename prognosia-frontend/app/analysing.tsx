@@ -5,15 +5,6 @@ import { useEffect } from 'react';
 import { router } from 'expo-router';
 
 export default function AnalysingScreen() {
-  useEffect(() => {
-    // Simular tiempo de procesamiento y luego navegar a resultados
-    const timer = setTimeout(() => {
-      router.replace('/results');
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, []);
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
