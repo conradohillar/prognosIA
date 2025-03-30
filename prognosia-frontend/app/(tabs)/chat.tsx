@@ -1,8 +1,9 @@
 import { StyleSheet, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Text, View } from '@/components/Themed';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
+import { getFiles} from './../../services/storage'
 
 export default function ChatScreen() {
 
@@ -17,6 +18,12 @@ export default function ChatScreen() {
     }
   };
 
+  useEffect(() => {
+    const downloadFiles = async () => {
+
+    }
+  },[]);
+  
   return (
     <KeyboardAvoidingView 
       behavior={Platform.OS === "ios" ? "padding" : "height"}
