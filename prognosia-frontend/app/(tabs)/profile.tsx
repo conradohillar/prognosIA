@@ -6,16 +6,19 @@ import { router } from 'expo-router';
 
 import { getUser } from '../../services/fireStore';
 import { useEffect, useState } from 'react';
+import { useGlobalState } from '../_layout';
 
 export default function ProfileScreen() {
 
-  const [user, setUser] = useState<any|null>({})
+  const {globalState, setGlobalState} = useGlobalState();
+  const [user, setUser] = useState<any>({})
 
   useEffect(() => {
     const fetchUser = async () => {
-      const user = await getUser();
-      setUser(user);
-    }
+      const userData = await getUser(globalState.userId);
+      console.log(userData)
+      setUser(userData);
+    };
     fetchUser();
   }, []);
 
@@ -27,7 +30,7 @@ export default function ProfileScreen() {
           style={styles.avatar}
         />
         <Text style={styles.name}>{user.name}</Text>
-        <Text style={styles.email}>{user.email}</Text>
+        <Text style={styles.email}>john.doe@example.com</Text>
       </View>
 
       <View style={styles.separator} />
@@ -36,16 +39,16 @@ export default function ProfileScreen() {
         <Text style={styles.sectionTitle}>Información personal</Text>
         <View style={styles.infoContainer}>
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>{user.name}</Text>
-            <Text style={styles.infoValue}>{user.email}</Text>
+            <Text style={styles.infoLabel}>Nombre de usuario</Text>
+            <Text style={styles.infoValue}>@johndoe</Text>
           </View>
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Genero</Text>
-            <Text style={styles.infoValue}>{user}</Text>
+            <Text style={styles.infoLabel}>Teléfono</Text>
+            <Text style={styles.infoValue}>+1 234 567 8900</Text>
           </View>
           <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>Fecha de nacimiento</Text>
-            <Text style={styles.infoValue}>{user.birth_date}</Text>
+            <Text style={styles.infoLabel}>Ubicación</Text>
+            <Text style={styles.infoValue}>New York, USA</Text>
           </View>
         </View>
       </View>
