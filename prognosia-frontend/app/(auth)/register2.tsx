@@ -1,9 +1,10 @@
-import { StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import { StyleSheet, TouchableOpacity, Platform, KeyboardAvoidingView, StatusBar, SafeAreaView } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import EditProfile from '@/components/editProfile';
+import { FontAwesome } from '@expo/vector-icons';
 
 
 export default function Register2() {
@@ -28,23 +29,50 @@ export default function Register2() {
   };
 
   return (
-    <EditProfile />
+    <SafeAreaView style={styles.container}>
+    <KeyboardAvoidingView 
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}
+    >
+      <View style={styles.container}>
+      <View style={styles.header}>
+        <Text style={styles.title}>Termina de completar tu perfil</Text>
+      </View>
+      <EditProfile />
+    </View>
+    </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-  },
-  header: {
-    marginBottom: 30,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+      },
+      header: {
+        paddingVertical: 16,
+        paddingHorizontal: 20,
+        backgroundColor: '#fff',
+        borderBottomWidth: 1,
+        borderBottomColor: '#eee',
+        flexDirection: 'row',
+        alignItems: 'center',
+        elevation: 2,
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+      },
+      closeBtn: {
+        padding: 8,
+        marginRight: 16,
+      },
+      title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#333',
+      },
   form: {
     gap: 20,
   },
