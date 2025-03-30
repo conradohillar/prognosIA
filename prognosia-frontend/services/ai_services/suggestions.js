@@ -196,30 +196,38 @@ function cargarDatosPaciente() {
 // ──────────────── 7. GENERAR RESUMEN VIA OPENAI ─────────────────────────────
 // ─────────────────────────────────────────────────────────────────────────────
 async function generarResumenIA(contenido) {
-  // Para ejemplo, supongamos que si detectas alguna imagen, usas un modelo
-  // distinto. Aquí no se incluye el manejo de imágenes como en Python, 
-  // pero podrías adaptarlo si fuera necesario.
+    const model = "gpt-4o-mini"; // o "gpt-4", etc.
 
-  const model = "gpt-4o"; // o "gpt-4", etc.
+    const messages = `Genera un resumen claro y breve de este contenido:\n\n${contenido}`;
 
-  const messages = [
-    {
-      role: "user",
-      content: `Genera un resumen claro y breve de este contenido:\n\n${contenido}`
-    }
-  ];
-
-  try {
-    const response = await client.responses.create({
-      model: model,
-      input: messages
+    // Verificar si hay una imagen en el directorio del paciente
+    const imagenes = fs.readdirSync(PACIENTE_DIR).filter(file => {
+        const ext = path.extname(file).toLowerCase();
+        return ext === ".jpg" || ext === ".jpeg" || ext === ".png";
     });
-    // Retorna el texto de la respuesta
-    return response.output_text;
-  } catch (error) {
-    console.error("Error en generarResumenIA:", error);
-    return "";
-  }
+
+    if (imagenes.length > 0) {
+        const rutaImagen = path.join(PACIENTE_DIR, imagenes[0]); // Tomar la primera imagen encontrada
+        try {
+            const imagenBuffer = fs.readFileSync(rutaImagen);
+            const imagenBase64 = imagenBuffer.toString("base64");
+            messages.push( `Además, considera esta imagen codificada en base64:\n\n${imagenBase64}`);
+        } catch (error) {
+            console.error("Error al codificar la imagen en base64:", error);
+        }
+    }
+
+    try {
+        const response = await client.responses.create({
+            model: model,
+            input: messages
+        });
+        // Retorna el texto de la respuesta
+        return response.output_text;
+    } catch (error) {
+        console.error("Error en generarResumenIA:", error);
+        return "";
+    }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -272,7 +280,7 @@ ${resumenHistoria}
 
 Responde con una lista de estudios sugeridos, su breve descripción y por qué son importantes. 
 Ten en cuenta tanto los datos clínicos, personales, síntomas y medicamentos, como la frecuencia recomendada para el grupo del paciente.
-Evita alarmar al paciente e intenta mantener el lenguaje sencillo.
+Evita alarmar al paciente e intenta mantener el lenguaje sencillo. Evita cualquier saludo o despedida.
 `;
 
   try {

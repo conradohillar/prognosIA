@@ -124,7 +124,7 @@ ${resumenHistoria}
 ${sugerencia}
 
 🔹 **Genera un reporte profesional estructurado con los puntos clave para el médico.
-No agregues ningún saludo al final, pero sí la fecha. Ten en cuenta contexto clínico y todos los datos que se te brindan.**
+Agrega la fecha y despidete unicamente con "PrognosIA". Ten en cuenta contexto clínico y todos los datos que se te brindan.**
 `;
 
   try {
