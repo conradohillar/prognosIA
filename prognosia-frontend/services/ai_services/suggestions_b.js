@@ -120,9 +120,11 @@ async function suggest(medicamentos, sintomas) {
     📖 **Resumen de historia clínica**
     ${resumenHistoria}
 
-    El formato de la respuesta debe ser en Markdown, muy importante que sea asi. Responde con una lista de estudios sugeridos (no mas de 2 o 3 estudios, los mas importantes), su breve descripción y por qué son importantes. 
+    El formato de la respuesta debe ser en Markdown, muy importante que sea asi. Responde con una lista de estudios sugeridos (no mas de 2 estudios, los mas importantes), su breve descripción y por qué son importantes. 
     Ten en cuenta tanto los datos clínicos, personales, síntomas y medicamentos, como la frecuencia recomendada para el grupo del paciente.
     Evita alarmar al paciente e intenta mantener el lenguaje sencillo. Evita cualquier saludo o despedida.
+    Debajo, genera un reporte detallado para el médico. No incluyas información personal, como el nombre del paciente.
+    Despidete unicamente con "Análisis realizado por prognosIA". Ten en cuenta contexto clínico y todos los datos que se te brindan.
     `;
 
     try {
