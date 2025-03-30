@@ -6,27 +6,10 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import EditProfile from '@/components/editProfile';
 import { FontAwesome } from '@expo/vector-icons';
 
+import { editProfile } from '@/services/fireStore';
 
 export default function Register2() {
-  const [dateOfBirth, setDateOfBirth] = useState(new Date());
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [sex, setSex] = useState('');
-  const [height, setHeight] = useState('');
-  const [weight, setWeight] = useState('');
-  const [allergies, setAllergies] = useState('');
-  const [conditions, setConditions] = useState('');
 
-  const onDateChange = (event: any, selectedDate?: Date) => {
-    setShowDatePicker(false);
-    if (selectedDate) {
-      setDateOfBirth(selectedDate);
-    }
-  };
-
-  const handleSubmit = async () => {
-    // Handle form submission
-    router.push('/home');
-  };
 
   return (
     <SafeAreaView style={styles.container}>

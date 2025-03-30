@@ -32,7 +32,7 @@ export default function AddFileModal() {
         setPdfUri(previewUri);
       }
     } catch (err) {
-      console.error('Error picking document:', err);
+      
     }
   };
 
@@ -54,7 +54,7 @@ export default function AddFileModal() {
       router.back();
     }
     catch (err) {
-      console.error('Error uploading file:', err);
+      
     }
     finally {
       setIsUploading(false);

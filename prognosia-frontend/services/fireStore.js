@@ -5,18 +5,18 @@ import {
   addDoc,
   setDoc,
   updateDoc,
+  doc,
 } from "firebase/firestore/lite";
 
 import { db } from "./firebaseConfig";
 
-async function addUserDoc(email) {
+async function addUserDoc(docId, email) {
   try {
-    const docRef = await addDoc(collection(db, "users"), {
-      email,
-    });
-    console.log("Documento escrito con ID: ", docRef.id);
+    const userRef = doc(db, "users", docId);
+    await setDoc(userRef, { email: email }, { merge: true });
+    console.log("Documento creado con ID:", docId);
   } catch (e) {
-    console.error("Error añadiendo documento: ", e);
+    console.error("Error al crear el documento:", e);
   }
 }
 
@@ -82,19 +82,43 @@ async function getUser(user_id) {
   }
 }
 
-async function editProfile(user_id, updates) {
+async function editProfile(
+  user_id,
+  name,
+  gender,
+  weight_kg,
+  height_cm,
+  physical_activity_level,
+  allergies,
+  preexisting_conditions,
+  birth_date
+) {
   try {
     const userRef = doc(db, "users", user_id);
 
-    // Filtrar solo valores definidos para evitar sobreescrituras accidentales
-    const filteredUpdates = Object.fromEntries(
-      Object.entries(updates).filter(([_, v]) => v !== undefined)
+    // Crear objeto con solo los valores definidos
+    const updates = Object.fromEntries(
+      Object.entries({
+        name,
+        gender,
+        weight_kg,
+        height_cm,
+        physical_activity_level,
+        allergies,
+        preexisting_conditions,
+        birth_date,
+      }).filter(([_, v]) => v !== undefined)
     );
 
-    await updateDoc(userRef, filteredUpdates);
+    if (Object.keys(updates).length === 0) {
+      console.log("No hay datos para actualizar.");
+      return;
+    }
+
+    await updateDoc(userRef, updates);
     console.log("Perfil actualizado con éxito");
   } catch (error) {
-    console.error("Error actualizando perfil:", error);
+    throw new Error("Error al actualizar el perfil:", error.message);
   }
 }
 

@@ -5,8 +5,12 @@ import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/dat
 import DropDownPicker from 'react-native-dropdown-picker';
 import { FontAwesome } from '@expo/vector-icons';
 import { router } from 'expo-router';
+import { editProfile } from '@/services/fireStore';
+import { useGlobalState } from '../app/_layout'
+
 
 export default function EditProfile() {
+  const [name, setName] = useState('');
   const [birthDate, setBirthDate] = useState(new Date());
   const [sex, setSex] = useState('');
   const [height, setHeight] = useState('');
@@ -16,6 +20,20 @@ export default function EditProfile() {
   const [activityLevel, setActivityLevel] = useState('');
   const [openSex, setOpenSex] = useState(false);
   const [openActivity, setOpenActivity] = useState(false);
+  const {globalState, setGlobalState} = useGlobalState();
+
+
+
+  const handleSubmit = async () => {
+    try{
+      editProfile(globalState.userId,name,sex,weight,height,activityLevel,allergies,conditions,birthDate);
+
+      router.replace('/(tabs)/profile');
+    }catch (error) {
+      console.log('Error al guardar cambios:', error);
+      return;
+    }
+  }
 
   const sexItems = [
     {label: 'Hombre', value: 'hombre'},
@@ -24,11 +42,11 @@ export default function EditProfile() {
   ];
 
   const activityItems = [
-    {label: 'Nunca', value: 'nunca'},
-    {label: 'Una vez por semana o menos', value: 'una_vez'}, 
-    {label: 'Entre 1 y 3 veces por semana', value: 'una_tres'},
-    {label: 'Entre 4 y 6 veces por semana', value: 'cuatro_seis'},
-    {label: 'Todos los días', value: 'diario'}
+    {label: 'Nunca', value: 'Nunca'},
+    {label: 'Una vez por semana o menos', value: 'Una vez por semana o menos'}, 
+    {label: 'Entre 1 y 3 veces por semana', value: 'Entre 1 y 3 veces por semana'},
+    {label: 'Entre 4 y 6 veces por semana', value: 'Entre 4 y 6 veces por semana'},
+    {label: 'Todos los días', value: 'Todos los días'}
   ];
 
   return (
@@ -40,9 +58,8 @@ export default function EditProfile() {
             <Text style={styles.label}>Nombre</Text>
             <TextInput
                   style={[styles.input, styles.numericInput]}
-                  value={height}
-                  onChangeText={setHeight}
-                  keyboardType="numeric"
+                  value={name}
+                  onChangeText={setName}
                   placeholder="Nombre"
                   placeholderTextColor="#999"
                 />
@@ -136,7 +153,7 @@ export default function EditProfile() {
 
           </View>
 
-          <TouchableOpacity style={styles.saveButton}>
+          <TouchableOpacity onPress={handleSubmit} style={styles.saveButton}>
             <Text style={styles.saveButtonText}>Guardar Cambios</Text>
           </TouchableOpacity>
         </View>
