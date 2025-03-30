@@ -2,8 +2,20 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
-import { useEffect } from 'react';
+import { useEffect, createContext, useContext, useState } from 'react';
 import 'react-native-reanimated';
+
+const GlobalStateContext = createContext<{
+  globalState: { username: string; token: string | null; email: string | null; userId: string | null };
+  setGlobalState: React.Dispatch<
+    React.SetStateAction<{
+      username: string;
+      token: string | null;
+      email: string | null;
+      userId: string | null;
+    }>
+  >;
+} | null>(null);
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -43,7 +55,20 @@ export default function RootLayout() {
 }
 
 function RootLayoutNav() {
+  const [globalState, setGlobalState] = useState<{
+    username: string;
+    token: string | null;
+    email: string | null;
+    userId: string | null;
+  }>({
+    username: "User",
+    token: null,
+    email: null,
+    userId: null,
+  });
+
   return (
+    <GlobalStateContext.Provider value={{ globalState, setGlobalState }}>
       <Stack>
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="(auth)" options={{ headerShown: false }} />
@@ -55,5 +80,8 @@ function RootLayoutNav() {
         <Stack.Screen name="suggestions/tendencies" options={{ headerShown: false }} />
         <Stack.Screen name="suggestions/preventiveControls" options={{ headerShown: false }} />
       </Stack>
+    </GlobalStateContext.Provider>
   );
 }
+
+export const useGlobalState = () => useContext(GlobalStateContext)!;
