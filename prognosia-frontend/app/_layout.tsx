@@ -79,6 +79,8 @@ function RootLayoutNav() {
         <Stack.Screen name="editProfileModal" options={{ presentation: 'modal', headerShown: false }} />
         <Stack.Screen name="suggestions/tendencies" options={{ headerShown: false }} />
         <Stack.Screen name="suggestions/preventiveControls" options={{ headerShown: false }} />
+        <Stack.Screen name="analysing" options={{ headerShown: false }} />
+        <Stack.Screen name="results" options={{ headerShown: false }} />
       </Stack>
     </GlobalStateContext.Provider>
   );

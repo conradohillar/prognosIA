@@ -3,6 +3,7 @@ import {
   signInWithEmailAndPassword,
 } from "firebase/auth";
 import { auth } from "./firebaseConfig";
+import { addUserDoc } from "./fireStore";
 
 export const signUp = async (email, password) => {
   try {
@@ -13,6 +14,7 @@ export const signUp = async (email, password) => {
     );
     const user = userCredential.user;
     console.log("Usuario registrado:", user);
+    await addUserDoc(user.uid);
     return user;
   } catch (error) {
     console.error("Error en el registro:", error.message);
