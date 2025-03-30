@@ -2,16 +2,18 @@ import { StyleSheet, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingVi
 import { useState } from 'react';
 import { Text, View } from '@/components/Themed';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 
 export default function ChatScreen() {
 
   const [sintomas, setSintomas] = useState('');
   const [medicamentos, setMedicamentos] = useState('');
+
+  const router = useRouter();
   
   const enviarInformacion = () => {
-    if (sintomas.trim()) {
-      console.log('Enviando información...' + sintomas + ' ' + medicamentos); 
-    }
+    // Procesar la información y navegar a la pantalla de resultados
+    router.replace('/analysing');
   };
 
   return (
