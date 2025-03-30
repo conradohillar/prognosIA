@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator, Image } from 'react-native';
 import { useState } from 'react';
 import { router } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
@@ -56,6 +56,10 @@ export default function RegisterScreen() {
 
   return (
     <View style={styles.container}>
+      <Image 
+        source={require('../../assets/images/prognosia-high-resolution-logo.png')} 
+        style={{ width: 300, height: 200, alignSelf: 'center', marginBottom: 20, borderRadius: 20, borderWidth: 1, borderColor: '#ddd' }} 
+      />
       <Text style={styles.title}>Crear cuenta</Text>
       
       <View style={styles.inputContainer}>

@@ -8,10 +8,6 @@ export default function ProfileScreen() {
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
-        <Image 
-          source={{uri: 'https://via.placeholder.com/100'}}
-          style={styles.avatar}
-        />
         <Text style={styles.name}>John Doe</Text>
         <Text style={styles.email}>john.doe@example.com</Text>
       </View>
