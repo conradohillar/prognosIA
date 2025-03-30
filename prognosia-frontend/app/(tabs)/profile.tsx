@@ -1,6 +1,7 @@
 import { StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { Text, View } from '@/components/Themed';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { router } from 'expo-router';
 
 export default function ProfileScreen() {
@@ -13,15 +14,9 @@ export default function ProfileScreen() {
         />
         <Text style={styles.name}>John Doe</Text>
         <Text style={styles.email}>john.doe@example.com</Text>
-        
-        <TouchableOpacity 
-          style={styles.editButton}
-          onPress={() => router.push('/editProfileModal')}
-        >
-          <FontAwesome name="edit" size={16} color="#fff" />
-          <Text style={styles.editButtonText}>Edit Profile</Text>
-        </TouchableOpacity>
       </View>
+
+      <View style={styles.separator} />
 
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Información personal</Text>
@@ -41,21 +36,42 @@ export default function ProfileScreen() {
         </View>
       </View>
 
+      <View style={styles.separator} />
+
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>Estadísticas</Text>
-        <View style={styles.statsContainer}>
-          <View style={styles.statItem}>
-            <Text style={styles.statNumber}>156</Text>
-            <Text style={styles.statLabel}>Predicciones</Text>
-          </View>
-          <View style={styles.statItem}>
-            <Text style={styles.statNumber}>89%</Text>
-            <Text style={styles.statLabel}>Precisión</Text>
-          </View>
-          <View style={styles.statItem}>
-            <Text style={styles.statNumber}>24</Text>
-            <Text style={styles.statLabel}>Rank</Text>
-          </View>
+        <Text style={styles.sectionTitle}>Sugerencias</Text>
+        <View style={styles.suggestionsContainer}>
+          <TouchableOpacity 
+            style={styles.suggestionCard}
+            onPress={() => router.push('/suggestions/preventiveControls')}
+          >
+            <View style={styles.suggestionIconContainer}>
+              <FontAwesome5 name="heartbeat" size={24} color="#f44" />
+            </View>
+            <View style={styles.suggestionContent}>
+              <Text style={styles.suggestionTitle}>Chequeos Preventivos</Text>
+              <Text style={styles.suggestionDescription}>
+                Basado en tu historial, te sugerimos algunos estudios preventivos
+              </Text>
+            </View>
+            <FontAwesome5 name="chevron-right" size={16} color="#666" />
+          </TouchableOpacity>
+
+          <TouchableOpacity 
+            style={styles.suggestionCard}
+            onPress={() => router.push('/suggestions/tendencies')}
+          >
+            <View style={styles.suggestionIconContainer}>
+              <FontAwesome5 name="chart-line" size={24} color="#f44" />
+            </View>
+            <View style={styles.suggestionContent}>
+              <Text style={styles.suggestionTitle}>Análisis de Tendencias</Text>
+              <Text style={styles.suggestionDescription}>
+                Mirá el progreso de tus indicadores de salud
+              </Text>
+            </View>
+            <FontAwesome5 name="chevron-right" size={16} color="#666" />
+          </TouchableOpacity>
         </View>
       </View>
     </ScrollView>
@@ -70,7 +86,7 @@ const styles = StyleSheet.create({
   header: {
     alignItems: 'center',
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: '#f5f5f5',
   },
   avatar: {
     width: 100,
@@ -91,7 +107,7 @@ const styles = StyleSheet.create({
   editButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F00',
+    backgroundColor: '#F44',
     paddingHorizontal: 20,
     paddingVertical: 10,
     borderRadius: 20,
@@ -101,10 +117,15 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
   },
+  separator: {
+    height: 1,
+    backgroundColor: '#ccc',
+    marginHorizontal: 20,
+  },
   section: {
     marginTop: 20,
     padding: 20,
-    backgroundColor: '#fff',
+    backgroundColor: '#f5f5f5',
   },
   sectionTitle: {
     fontSize: 20,
@@ -114,13 +135,13 @@ const styles = StyleSheet.create({
   },
   infoContainer: {
     gap: 15,
-    backgroundColor: '#fff'
+    backgroundColor: '#f5f5f5'
   },
   infoRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: '#fff'
+    backgroundColor: '#f5f5f5'
   },
   infoLabel: {
     fontSize: 16,
@@ -131,23 +152,50 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#000',
   },
-  statsContainer: {
+  suggestionsContainer: {
+    backgroundColor: '#f5f5f5',
+    gap: 12,
+  },
+  suggestionCard: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    backgroundColor: '#fff'
-  },
-  statItem: {
     alignItems: 'center',
+    backgroundColor: '#fff',
+    padding: 16,
+    borderRadius: 12,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  suggestionIconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: '#f5f5f5',
+    borderWidth: 0.5,
+    borderColor: '#aaa',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 16,
+  },
+  suggestionContent: {
+    flex: 1,
+    marginRight: 12,
     backgroundColor: '#fff'
   },
-  statNumber: {
-    fontSize: 24,
+  suggestionTitle: {
+    fontSize: 16,
     fontWeight: 'bold',
-    color: '#F00',
+    color: '#F44',
   },
-  statLabel: {
+  suggestionDescription: {
     fontSize: 14,
     color: '#666',
-    marginTop: 5,
+    lineHeight: 18,
+    backgroundColor: '#fff'
   },
 });

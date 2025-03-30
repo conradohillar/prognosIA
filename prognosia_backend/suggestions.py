@@ -7,6 +7,7 @@ import csv
 import sys
 from datetime import datetime
 from config import API_KEY
+from PIL import Image
 
 # Configura tu clave de API
 client = openai.OpenAI(api_key=API_KEY)
@@ -18,7 +19,7 @@ DATA_JSON = os.path.join(PACIENTE_DIR, "data.json")
 HISTORIA_ARCHIVO = os.path.join(PACIENTE_DIR, "historia")  # Puede ser .pdf o .txt
 RESUMEN_ESTUDIOS = os.path.join(PACIENTE_DIR, "resumen_estudios.txt")
 RESUMEN_HISTORIA = os.path.join(PACIENTE_DIR, "resumen_historia.txt")
-SUGERENCIAS_JSON = "sugerencias.json"
+SUGERENCIAS_JSON = os.path.join(PACIENTE_DIR, "sugerencias.json") 
 METADATA_FILE = os.path.join(PACIENTE_DIR, "metadata.json")
 
 # 🔹 Validar entrada de parámetros en ejecución
@@ -26,8 +27,9 @@ if len(sys.argv) < 3:
     print("⚠️ Uso: python suggestions.py \"medicamentos\" \"sintomas\"")
     sys.exit(1)
 
-medicamentos = sys.argv[1]
-sintomas = sys.argv[2]
+# Función para detectar imágenes en el directorio de estudios
+def detectar_imagenes():
+    return [f for f in os.listdir(ESTUDIOS_DIR) if f.lower().endswith((".png", ".jpg", ".jpeg"))]
 
 def verificar_directorio(directorio):
     if not os.path.exists(directorio):
@@ -105,11 +107,31 @@ def cargar_datos_paciente():
         return None
 
 def generar_resumen_ia(resumen):
-    response = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=[{"role": "user", "content": f"Genera un resumen claro y breve de este contenido: {resumen}"}]
-    )
+    imagenes = detectar_imagenes()
+    model = "gpt-4o" if imagenes else "gpt-4o-mini"
+
+    with open(RESUMEN_ESTUDIOS, "r", encoding="utf-8") as file:
+        contenido = file.read()
+    
+    messages = [{"role": "user", "content": f"Genera un resumen claro y breve de este contenido: {contenido}"}]
+    
+    if imagenes:
+        for img in imagenes:
+            with open(os.path.join(ESTUDIOS_DIR, img), "rb") as image_file:
+                messages.append({"role": "user", "content": {"type": "image", "image": image_file.read()}})
+    
+    response = client.chat.completions.create(model=model, messages=messages)
     return response.choices[0].message.content
+
+def guardar_sugerencia(sugerencia, medicamentos, sintomas):
+    data = {
+        "fecha": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "medicamentos": medicamentos,
+        "sintomas": sintomas,
+        "sugerencia": sugerencia
+    }
+    with open(SUGERENCIAS_JSON, "w", encoding="utf-8") as file:
+        json.dump(data, file, indent=4, ensure_ascii=False)
 
 # 🔹 Función para solicitar estudios médicos sugeridos
 def sugerir_estudios(datos_medicos, medicamentos, sintomas, resumen_estudios, resumen_historia):
@@ -135,7 +157,10 @@ def sugerir_estudios(datos_medicos, medicamentos, sintomas, resumen_estudios, re
     {resumen_historia}
 
     **Responde con una lista de estudios sugeridos, su breve descripción y por qué son importantes. 
-    Estos deben ser faciles de entender por el usuario y no debe ser muy especifico. No debe asustar o hacer preocupar al usuario.**
+    Estos deben ser faciles de entender por el usuario y no debe ser muy especifico. No debe asustar o hacer preocupar al usuario.
+    Ten en cuenta para esto ademas de los datos clinicos, personales, sintomas y medicamentos tambien la frecuencia con la que las
+    personas de ese grupo deben realizarse estudios de distintos tipos y la ultima vez que se los haya realizado.
+    Tambien debes darle importancia a los sintomas actuales y los datos previos.**
     """
     #**Responde con una lista de estudios sugeridos, sin explicaciones adicionales.**
     response = client.chat.completions.create(
@@ -145,19 +170,27 @@ def sugerir_estudios(datos_medicos, medicamentos, sintomas, resumen_estudios, re
     return response.choices[0].message.content
 
 # Ejecutar el programa
-metadata = obtener_metadata()
-datos_paciente = cargar_datos_paciente()
+def suggest(medicamentos, sintomas):
 
-actualizar_resumen_estudios(metadata)
-actualizar_resumen_historia(metadata)
+    if not medicamentos:
+        medicamentos = ""
+    if not sintomas:
+        sintomas = ""
 
-with open(RESUMEN_ESTUDIOS, "r", encoding="utf-8") as file:
-    resumen_estudios = generar_resumen_ia(file.read())
+    metadata = obtener_metadata()
+    datos_paciente = cargar_datos_paciente()
 
-with open(RESUMEN_HISTORIA, "r", encoding="utf-8") as file:
-    resumen_historia = generar_resumen_ia(file.read())
+    actualizar_resumen_estudios(metadata)
+    actualizar_resumen_historia(metadata)
 
-resultado = sugerir_estudios(datos_paciente, medicamentos, sintomas, resumen_estudios, resumen_historia)
+    with open(RESUMEN_ESTUDIOS, "r", encoding="utf-8") as file:
+        resumen_estudios = generar_resumen_ia(file.read())
 
-print("\n📋 **Estudios sugeridos:**\n")
-print(resultado)
+    with open(RESUMEN_HISTORIA, "r", encoding="utf-8") as file:
+        resumen_historia = generar_resumen_ia(file.read())
+
+    resultado = sugerir_estudios(datos_paciente, medicamentos, sintomas, resumen_estudios, resumen_historia)
+    guardar_sugerencia(resultado, medicamentos, sintomas)
+
+    print("\n📋 **Estudios sugeridos:**\n")
+    print(resultado)

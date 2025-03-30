@@ -65,8 +65,8 @@ export default function AddFileModal() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => router.back()} style={styles.closeButton}>
-          <FontAwesome name="times" size={24} color="#666" />
+        <TouchableOpacity onPress={() => router.back()} style={styles.closeBtn}>
+          <FontAwesome name="chevron-down" size={16} color="#666" />
         </TouchableOpacity>
         <Text style={styles.title}>Agregar Documento</Text>
       </View>
@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
   },
-  closeButton: {
+  closeBtn: {
     padding: 8,
   },
   title: {

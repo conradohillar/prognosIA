@@ -2,15 +2,26 @@ import { StyleSheet, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingVi
 import { useState } from 'react';
 import { Text, View } from '@/components/Themed';
 import { FontAwesome5 } from '@expo/vector-icons';
+import axios from 'axios';
 
 export default function ChatScreen() {
+
   const [sintomas, setSintomas] = useState('');
   const [medicamentos, setMedicamentos] = useState('');
-
+  
   const enviarInformacion = () => {
     if (sintomas.trim()) {
-      // Aquí irá la lógica para procesar la información
-      console.log({ sintomas, medicamentos });
+      axios.post('http://localhost:8000/suggest', {
+        sintomas,
+        medicamentos
+      })
+      .then(response => {
+        console.log('Respuesta del servidor:', response.data);
+        // Navegar a la pantalla de resultados
+      })
+      .catch(error => {
+        console.error('Error al enviar información:', error);
+      });
     }
   };
 
@@ -24,6 +35,7 @@ export default function ChatScreen() {
         showsVerticalScrollIndicator={false}
       >
         <Text style={styles.titulo}>Contame sobre tu situación</Text>
+        <Text style={styles.subtitulo}>Utilizaré tu historia clínica, tus características físicas, y una breve descripicioń de tus síntomas y medicamentos para analizar tu estado de salud actual.</Text>
         
         <View style={styles.inputGroup}>
           <View style={styles.inputHeader}>
@@ -31,7 +43,7 @@ export default function ChatScreen() {
             <Text style={styles.inputTitle}>Síntomas</Text>
           </View>
           <TextInput
-            style={styles.textArea}
+            style={styles.textAreaSymptoms}
             value={sintomas}
             onChangeText={setSintomas}
             placeholder="Describe los síntomas que estás experimentando..."
@@ -46,12 +58,13 @@ export default function ChatScreen() {
           <View style={styles.inputHeader}>
             <FontAwesome5 name="pills" size={20} color="#f44" />
             <Text style={styles.inputTitle}>Medicamentos</Text>
+            <Text>  (Opcional)</Text>
           </View>
           <TextInput
-            style={styles.textArea}
+            style={styles.textAreaMeds}
             value={medicamentos}
             onChangeText={setMedicamentos}
-            placeholder="¿Estás tomando algún medicamento? Especifica cuáles..."
+            placeholder="¿Estás tomando algún medicamento? Esta información puede ser útil para profundizar el análisis."
             placeholderTextColor="#666"
             multiline
             numberOfLines={4}
@@ -85,12 +98,18 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#333',
     marginVertical: 30,
-    textAlign: 'center',
+  },
+  subtitulo: {
+    fontSize: 16,
+    color: '#666',
+    marginBottom: 20,
+    textAlign: 'left',
   },
   inputGroup: {
     marginBottom: 24,
     backgroundColor: '#fff',
     borderRadius: 16,
+    
     padding: 16,
     shadowColor: '#000',
     shadowOffset: {
@@ -112,13 +131,25 @@ const styles = StyleSheet.create({
     color: '#333',
     marginLeft: 10,
   },
-  textArea: {
+  textAreaSymptoms: {
     backgroundColor: '#f8f8f8',
     borderRadius: 12,
     padding: 16,
+    borderWidth: 0.5,
+    borderColor: '#aaa',
     fontSize: 16,
     color: '#333',
-    minHeight: 120,
+    minHeight: 150,
+  },
+  textAreaMeds: {
+    backgroundColor: '#f8f8f8',
+    borderRadius: 12,
+    padding: 16,
+    borderWidth: 0.5,
+    borderColor: '#aaa',
+    fontSize: 16,
+    color: '#333',
+    minHeight: 100,
   },
   botonEnviar: {
     backgroundColor: '#f44',
