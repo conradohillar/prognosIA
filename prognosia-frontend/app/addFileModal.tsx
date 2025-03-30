@@ -6,10 +6,13 @@ import { router } from 'expo-router';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useState } from 'react';
 import { DocumentPickerAsset } from 'expo-document-picker';
+import { useGlobalState } from "./_layout";
 
 export default function AddFileModal() {
   const [selectedFile, setSelectedFile] = useState<DocumentPickerAsset | null>(null);
   const [pdfUri, setPdfUri] = useState<string | null>(null);
+
+  const { globalState } = useGlobalState();
 
   const pickDocument = async () => {
     try {
@@ -34,32 +37,13 @@ export default function AddFileModal() {
   const uploadFile = async () => {
     if (!selectedFile) return;
 
+    const response = await fetch(selectedFile.uri);
+    const blob = await response.blob();
+
     try {
-      const formData = new FormData();
-      formData.append('file', {
-        uri: selectedFile.uri,
-        type: selectedFile.mimeType || 'application/pdf',
-        name: selectedFile.name
-      } as any);
-
-      // Send file to backend
-      const response = await fetch('YOUR_API_ENDPOINT/upload', {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-
-      if (response.ok) {
-        console.log('File uploaded successfully');
-        router.back();
-      } else {
-        console.error('Upload failed:', await response.text());
-      }
-    } catch (error) {
-      console.error('Error uploading file:', error);
+      const downloadURL = await uploadToFirebase(globalState.userId, blob);
     }
+
   };
 
   return (

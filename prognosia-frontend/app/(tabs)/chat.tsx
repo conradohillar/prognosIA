@@ -2,14 +2,18 @@ import { StyleSheet, TextInput, TouchableOpacity, ScrollView, KeyboardAvoidingVi
 import { useState } from 'react';
 import { Text, View } from '@/components/Themed';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { useRouter } from 'expo-router';
 import axios from 'axios';
 
 export default function ChatScreen() {
 
   const [sintomas, setSintomas] = useState('');
   const [medicamentos, setMedicamentos] = useState('');
+
+  const router = useRouter();
   
   const enviarInformacion = () => {
+    // Procesar la información y navegar a la pantalla de resultados
     if (sintomas.trim()) {
       axios.post('http://localhost:8000/suggest', {
         sintomas,
@@ -17,7 +21,7 @@ export default function ChatScreen() {
       })
       .then(response => {
         console.log('Respuesta del servidor:', response.data);
-        // Navegar a la pantalla de resultados
+        router.replace('/analysing');
       })
       .catch(error => {
         console.error('Error al enviar información:', error);
